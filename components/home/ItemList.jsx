@@ -15,7 +15,7 @@ const ItemList = ({ products }) => {
       <div className="mt-4 flex flex-wrap gap-4">
         {
             productList.map((product, index)=>(
-                <FoodItem key={index} name={product.name} price={product.price} stock={product.stock} imgSrc={product.imgSrc} />
+                <FoodItem key={index} productId={product.id} name={product.name} price={product.price} stock={product.stock} imgSrc={product.imgSrc} />
             ))
         }
       </div>

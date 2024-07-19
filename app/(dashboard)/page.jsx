@@ -1,4 +1,4 @@
-import ItemList from "@/components/ItemList";
+import ItemList from "@/components/home/ItemList";
 import { db } from "@/firebase/config";
 import { SignedIn, UserButton } from "@clerk/nextjs";
 import { currentUser } from "@clerk/nextjs/server";
@@ -29,16 +29,16 @@ export default async function Home() {
   const products = await getProductList();
 
   return (
-    <div className="w-full min-h-screen p-6 pb-20">
-      <div className="flex justify-between items-center">
+    <div className="min-h-screen w-full p-6 pb-20">
+      <div className="flex items-center justify-between">
         <HiViewGrid
           size={30}
           className="rounded-md bg-dark-100 p-1 text-primary"
         />
         <div>
-        <SignedIn>
-          <UserButton />
-        </SignedIn>
+          <SignedIn>
+            <UserButton />
+          </SignedIn>
         </div>
       </div>
       <p className="mt-4">
