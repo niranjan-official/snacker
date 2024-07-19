@@ -21,7 +21,9 @@ export async function POST(req, res) {
         const product = products.find((p) => p.productId === productRef.id);
 
         if (!productDoc.exists()) {
-          throw new Error(`Product with ID ${product.productId} does not exist!`);
+          throw new Error(
+            `Product with ID ${product.productId} does not exist!`,
+          );
         }
 
         const productData = productDoc.data();
@@ -43,9 +45,12 @@ export async function POST(req, res) {
     });
 
     console.log("All products reserved successfully");
-    return NextResponse.json({ message: "Reservation successful" });
+    return NextResponse.json({
+      success: true,
+      message: "Reservation successful",
+    });
   } catch (e) {
     console.error(e);
-    return NextResponse.json({ message: e.message });
+    return NextResponse.json({ success: false, message: e.message });
   }
 }

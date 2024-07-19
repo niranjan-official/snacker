@@ -1,6 +1,6 @@
 import useCartStore from "@/hooks/useCartStore";
 import Image from "next/image";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
   MdAddBox,
   MdIndeterminateCheckBox,
@@ -15,39 +15,27 @@ import {
   DialogTrigger,
 } from "@/components/ui/dialog";
 import { VscLoading } from "react-icons/vsc";
+import { useUser } from "@clerk/nextjs";
+import { reserveProduct } from "@/utils/reserveProduct";
+import Script from "next/script";
 
 const FoodItem = ({ productId, name, price, stock, imgSrc }) => {
+  const { user } = useUser();
   const { addProduct } = useCartStore();
   const [count, setCount] = useState(1);
   const [load, setLoad] = useState(false);
+  const [amount, setAmount] = useState(0);
 
-  const reserveProduct = async () => {
-    setLoad(true);
-    try {
-      const res = await fetch(
-        `${process.env.NEXT_PUBLIC_SERVER_URL}/api/reserve-product`,
-        {
-          method: "POST",
-          body: JSON.stringify([{
-            productId: productId,
-            count: count
-          }]),
-          headers: {
-            "content-type": "application/json",
-          },
-        },
-      );
-      if (res.ok) {
-        console.log("Successfull");
-      }
-    } catch (error) {
-      console.log(error);
-    }
-    setLoad(false);
-  };
+  useEffect(() => {
+    setAmount(price * count);
+  }, [count]);
 
   return (
     <div className="relative flex w-[calc(50%-0.5rem)] flex-col rounded-lg bg-dark-100 p-2 text-neutral-100 shadow">
+      <Script
+        id="razorpay-checkout-js"
+        src="https://checkout.razorpay.com/v1/checkout.js"
+      />
       <div className="aspect-square w-full bg-gray-600">
         <Image
           src={imgSrc}
@@ -105,7 +93,14 @@ const FoodItem = ({ productId, name, price, stock, imgSrc }) => {
                 </div>
                 <button
                   disabled={load}
-                  onClick={reserveProduct}
+                  onClick={() =>
+                    reserveProduct(
+                      [{ productId, count }],
+                      setLoad,
+                      amount,
+                      user,
+                    )
+                  }
                   className="mt-2 flex w-full items-center justify-center rounded-lg bg-primary p-3 py-2 font-bold text-dark-200 shadow hover:bg-primary/60 disabled:bg-primary/70"
                 >
                   {load ? (
