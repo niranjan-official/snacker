@@ -7,6 +7,7 @@ export const createNewOrder = async (orderId, products, user, amount) => {
       userId: user?.id || "",
       products: products,
       amount: amount,
+      status: 'pending',
       timeStamp: serverTimestamp(),
     });
     return { success: true };

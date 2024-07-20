@@ -16,12 +16,13 @@ import { createNewOrder } from "@/utils/createNewOrder";
 
 const page = () => {
   const { user } = useUser();
-  const { products } = useCartStore();
+  const { products, removeAll } = useCartStore();
   const [amount, setAmount] = useState(0);
   const [buttonLoad, setButtonLoad] = useState(false);
   const [QR, setQR] = useState("");
   const [data, setData] = useState("");
   const [open, setOpen] = useState(false);
+  const [triggerReload, setTriggerReload] = useState(false);
 
   useEffect(() => {
     const total = products.reduce(
@@ -52,6 +53,7 @@ const page = () => {
               setQR(res.orderId);
               await createNewOrder(res.orderId, products, user, amount);
               setData({ orderId: res.orderId, amount });
+              removeAll();
               return;
             }
           } else {
@@ -63,6 +65,7 @@ const page = () => {
         await cancelReservation(products);
       } else {
         console.error("Reservation error:", reservationResult.message);
+        setTriggerReload(true);
       }
     } catch (error) {
       console.error("Error during reservation process:", error.message);
@@ -86,7 +89,7 @@ const page = () => {
           />
         </div>
         {products[0] && (
-          <div className="mt-4 flex w-full flex-col border-b pb-4">
+          <div className="mt-6 flex w-full flex-col border-b pb-4">
             <div className="flex w-full justify-between">
               <span>Total Amount :</span>
               <span>₹ {amount} INR</span>
@@ -109,15 +112,17 @@ const page = () => {
         )}
         <div className="mt-8 flex flex-col gap-5">
           {products[0] ? (
-            products.map((product, index) => (
+            products.map((product) => (
               <FoodBlock
-                key={index}
+                key={product.productId}
                 id={product.productId}
                 count={product.count}
+                triggerReload={triggerReload}
+                setTriggerReload={setTriggerReload}
               />
             ))
           ) : (
-            <p>Cart is Empty</p>
+            <p className="text-3xl font-extrabold text-center mt-4 text-neutral-50/50 border py-3">Cart is Empty</p>
           )}
         </div>
       </div>

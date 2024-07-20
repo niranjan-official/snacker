@@ -8,7 +8,6 @@ import { HiViewGrid } from "react-icons/hi";
 export const revalidate = 0;
 
 const getProductList = async () => {
-  
   try {
     let products = [];
     const q = query(collection(db, "products"), where("stock", ">", 0));

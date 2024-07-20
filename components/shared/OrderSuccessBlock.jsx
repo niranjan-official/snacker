@@ -95,7 +95,7 @@ const OrderSuccessBlock = ({ open, setOpen, QR, data }) => {
               Continue to Home
             </AlertDialogAction>
             <AlertDialogAction
-              onClick={() => Router.push("/history")}
+              onClick={() => Router.push("/orders")}
               disabled={!data?.amount}
               className="rounded-md bg-blue-500 px-4 py-2 font-semibold text-neutral-50 shadow hover:bg-blue-400"
             >
