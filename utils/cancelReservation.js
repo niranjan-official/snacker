@@ -1,6 +1,6 @@
-export const reserveProduct = async (products) => {
+export const cancelReservation = async (products) => {
   try {
-    const res = await fetch(`/api/reserve-product`, {
+    const res = await fetch(`/api/cancel-reservation`, {
       method: "POST",
       body: JSON.stringify(products),
       headers: {
@@ -9,15 +9,15 @@ export const reserveProduct = async (products) => {
     });
     const data = await res.json();
     if (res.ok && data.success) {
-      console.log("Reservation successful");
+      console.log("Reservation Cancelled Successfully");
       return { success: true };
     } else {
-      console.error(data.message || "Reservation failed");
+      console.error(data.message || "Reservation Cancellation Failed");
       return { success: false, message: data.message };
     }
   } catch (error) {
-    console.error("Error reserving products:", error.message);
-    alert("Error reserving products. Please try again.");
+    console.error("Error cancelling products:", error.message);
+    alert("Error cancelling products. Please try again.");
     return { success: false, message: e.message };
   }
 };

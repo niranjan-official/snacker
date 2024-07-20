@@ -8,12 +8,20 @@ import { VscLoading } from "react-icons/vsc";
 import { useUser } from "@clerk/nextjs";
 import Script from "next/script";
 import { reserveProduct } from "@/utils/reserveProduct";
+import { processPayment } from "@/utils/processPayment";
+import { updateReservation } from "@/utils/updateReservation";
+import { cancelReservation } from "@/utils/cancelReservation";
+import OrderSuccessBlock from "@/components/shared/OrderSuccessBlock";
+import { createNewOrder } from "@/utils/createNewOrder";
 
 const page = () => {
   const { user } = useUser();
   const { products } = useCartStore();
   const [amount, setAmount] = useState(0);
-  const [load, setLoad] = useState(false);
+  const [buttonLoad, setButtonLoad] = useState(false);
+  const [QR, setQR] = useState("");
+  const [data, setData] = useState("");
+  const [open, setOpen] = useState(false);
 
   useEffect(() => {
     const total = products.reduce(
@@ -22,6 +30,46 @@ const page = () => {
     );
     setAmount(total);
   }, [products]);
+
+  const purchaseProduct = async () => {
+    setButtonLoad(true);
+    try {
+      const reservationResult = await reserveProduct(products);
+      console.log("Reservation Result:", reservationResult);
+
+      if (reservationResult.success) {
+        try {
+          const res = await processPayment(amount, user);
+          console.log("Payment Result:", res);
+
+          if (res && res.ok) {
+            setOpen(true);
+
+            const result = await updateReservation(products, res.orderId);
+            console.log("Update Reservation Result:", result);
+
+            if (result.success) {
+              setQR(res.orderId);
+              await createNewOrder(res.orderId, products, user, amount);
+              setData({ orderId: res.orderId, amount });
+              return;
+            }
+          } else {
+            console.log("Payment not successful. Triggering cancellation.");
+          }
+        } catch (error) {
+          console.error("Error during payment processing:", error.message);
+        }
+        await cancelReservation(products);
+      } else {
+        console.error("Reservation error:", reservationResult.message);
+      }
+    } catch (error) {
+      console.error("Error during reservation process:", error.message);
+    } finally {
+      setButtonLoad(false);
+    }
+  };
 
   return (
     <div className="flex min-h-screen w-full flex-col justify-between p-6 pb-20">
@@ -37,6 +85,28 @@ const page = () => {
             className="rounded-md bg-dark-100 p-2 text-primary"
           />
         </div>
+        {products[0] && (
+          <div className="mt-4 flex w-full flex-col border-b pb-4">
+            <div className="flex w-full justify-between">
+              <span>Total Amount :</span>
+              <span>₹ {amount} INR</span>
+            </div>
+            <button
+              disabled={buttonLoad}
+              onClick={purchaseProduct}
+              className="mt-2 flex w-full items-center justify-center rounded-lg bg-primary p-3 font-bold text-dark-200 shadow hover:bg-primary/60 disabled:bg-primary/70"
+            >
+              {buttonLoad ? (
+                <VscLoading
+                  size={20}
+                  className="animate-spin text-dark-200/70"
+                />
+              ) : (
+                "Pay Now"
+              )}
+            </button>
+          </div>
+        )}
         <div className="mt-8 flex flex-col gap-5">
           {products[0] ? (
             products.map((product, index) => (
@@ -51,23 +121,8 @@ const page = () => {
           )}
         </div>
       </div>
-      <div className="flex w-full flex-col">
-        <div className="flex w-full justify-between">
-          <span>Total Amount :</span>
-          <span>₹ {amount} INR</span>
-        </div>
-        <button
-          disabled={load}
-          onClick={() => reserveProduct(products, setLoad, amount, user)}
-          className="mt-2 flex w-full items-center justify-center rounded-lg bg-primary p-3 font-bold text-dark-200 shadow hover:bg-primary/60 disabled:bg-primary/70"
-        >
-          {load ? (
-            <VscLoading size={20} className="animate-spin text-dark-200/70" />
-          ) : (
-            "Pay Now"
-          )}
-        </button>
-      </div>
+
+      <OrderSuccessBlock open={open} setOpen={setOpen} QR={QR} data={data} />
     </div>
   );
 };

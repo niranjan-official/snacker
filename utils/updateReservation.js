@@ -1,6 +1,6 @@
-export const reserveProduct = async (products) => {
+export const updateReservation = async (products, orderId) => {
   try {
-    const res = await fetch(`/api/reserve-product`, {
+    const res = await fetch(`/api/update-reservation`, {
       method: "POST",
       body: JSON.stringify(products),
       headers: {
@@ -9,15 +9,15 @@ export const reserveProduct = async (products) => {
     });
     const data = await res.json();
     if (res.ok && data.success) {
-      console.log("Reservation successful");
+      console.log("Reservation Updated Successfully");
       return { success: true };
     } else {
-      console.error(data.message || "Reservation failed");
+      console.error(data.message || "Reservation Updation Failed");
       return { success: false, message: data.message };
     }
   } catch (error) {
-    console.error("Error reserving products:", error.message);
-    alert("Error reserving products. Please try again.");
+    console.error("Error Updating products:", error.message);
+    alert("Error Updating products. Please try again.");
     return { success: false, message: e.message };
   }
 };

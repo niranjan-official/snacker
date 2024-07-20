@@ -1,10 +1,14 @@
+"use client";
 import { createOrderId } from "./createOrderId";
 
 export const processPayment = async (amount, user) => {
-    try {
-      const orderId = await createOrderId(amount);
-      if (!orderId) return;
-  
+  return new Promise((resolve, reject) => {
+    createOrderId(amount).then(orderId => {
+      if (!orderId) {
+        reject(new Error("Failed to create order ID"));
+        return;
+      }
+
       const options = {
         key: process.env.NEXT_PUBLIC_RAZORPAY_API_KEY_ID,
         amount: parseFloat(amount) * 100,
@@ -19,7 +23,7 @@ export const processPayment = async (amount, user) => {
             razorpayOrderId: response.razorpay_order_id,
             razorpaySignature: response.razorpay_signature,
           };
-  
+
           try {
             const result = await fetch("/api/verify", {
               method: "POST",
@@ -28,12 +32,13 @@ export const processPayment = async (amount, user) => {
             });
             const res = await result.json();
             if (res.isOk) {
-              alert("Payment successful");
+              resolve({ ok: true, orderId });
             } else {
-              alert(res.message);
+              reject(new Error("Payment verification failed"));
             }
           } catch (error) {
             console.error("Error verifying payment:", error.message);
+            reject(error);
           }
         },
         prefill: {
@@ -44,13 +49,16 @@ export const processPayment = async (amount, user) => {
           color: "#3399cc",
         },
       };
+
       const paymentObject = new window.Razorpay(options);
       paymentObject.on("payment.failed", function (response) {
         alert(response.error.description);
+        reject(new Error("Payment failed"));
       });
       paymentObject.open();
-    } catch (error) {
-      console.error("Error processing payment:", error.message);
-    }
-  };
-  
+    }).catch(error => {
+      console.error("Error creating order ID:", error.message);
+      reject(error);
+    });
+  });
+};
