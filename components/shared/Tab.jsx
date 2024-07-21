@@ -6,15 +6,35 @@ import { RiChatHistoryFill } from "react-icons/ri";
 import { usePathname } from "next/navigation";
 import Link from "next/link";
 import useCartStore from "@/hooks/useCartStore";
+import { ref, onValue } from "firebase/database";
+import { rtdb } from "@/firebase/config";
+import UpdationBlock from "./UpdationBlock";
 
 const Tab = () => {
   const path = usePathname();
   const { products } = useCartStore();
   const [hasProducts, setHasProducts] = useState(false);
+  const [onUpdation, setOnUpdation] = useState(false);
 
   useEffect(() => {
     setHasProducts(products.length > 0);
   }, [products]);
+
+  useEffect(() => {
+    try {
+      const starCountRef = ref(rtdb, "/onStockUpdation");
+      onValue(starCountRef, (snapshot) => {
+        const isUpdating = snapshot.val();
+        if (isUpdating) {
+          setOnUpdation(true);
+        } else {
+          setOnUpdation(false);
+        }
+      });
+    } catch (error) {
+      console.log(error.message);
+    }
+  }, []);
 
   return (
     <div className="fixed bottom-0 left-0 flex h-16 w-full items-center justify-evenly border-t border-dark-200 bg-dark-100 p-2">
@@ -23,6 +43,7 @@ const Tab = () => {
         className={`rounded-lg p-2 ${path === "/" ? "bg-primary text-dark-200" : "text-primary"}`}
       >
         <RiHome2Fill size={20} />
+        <UpdationBlock onUpdation={onUpdation} />
       </Link>
       <Link
         href={"/cart"}
