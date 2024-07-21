@@ -1,6 +1,7 @@
 import ItemList from "@/components/home/ItemList";
+import UserProfileButton from "@/components/home/UserProfileButton";
 import { db } from "@/firebase/config";
-import { SignedIn, UserButton } from "@clerk/nextjs";
+import { SignedIn, SignedOut, SignInButton, UserButton } from "@clerk/nextjs";
 import { currentUser } from "@clerk/nextjs/server";
 import { collection, getDocs, query, where } from "firebase/firestore";
 import { HiViewGrid } from "react-icons/hi";
@@ -13,7 +14,6 @@ const getProductList = async () => {
     const q = query(collection(db, "products"), where("stock", ">", 0));
     const querySnapshot = await getDocs(q);
     querySnapshot.forEach((doc) => {
-      console.log(doc.id, " => ", doc.data());
       const data = doc.data();
       products.push({ id: doc.id, ...data });
     });
@@ -35,11 +35,7 @@ export default async function Home() {
           size={30}
           className="rounded-md bg-dark-100 p-1 text-primary"
         />
-        <div>
-          <SignedIn>
-            <UserButton />
-          </SignedIn>
-        </div>
+        <UserProfileButton/>
       </div>
       <p className="mt-4">
         Hi{" "}

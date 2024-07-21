@@ -46,16 +46,24 @@ const page = async () => {
         <hr className="mt-2" />
       </div>
       <div className="mt-6 flex w-full flex-col gap-5">
-        {orders?.map((order, index) => (
-          <OrderBlock
-            key={index}
-            id={order.id}
-            amount={order.amount}
-            status={order.status}
-            timeStamp={order.timeStamp}
-            products={order.products}
-          />
-        ))}
+        {orders.length > 0 ? (
+          orders?.map((order, index) => (
+            <OrderBlock
+              key={index}
+              id={order.id}
+              amount={order.amount}
+              status={order.status}
+              timeStamp={order.timeStamp}
+              products={order.products}
+            />
+          ))
+        ) : (
+          <div className="mt-4 flex w-full flex-col items-center py-3 text-neutral-50/50">
+            <p className="mt-2 text-center text-3xl font-extrabold">
+              No orders found
+            </p>
+          </div>
+        )}
       </div>
     </div>
   );

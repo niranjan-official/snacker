@@ -1,5 +1,5 @@
 "use client";
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { RiHome2Fill } from "react-icons/ri";
 import { BsFillBagHeartFill } from "react-icons/bs";
 import { RiChatHistoryFill } from "react-icons/ri";
@@ -10,6 +10,11 @@ import useCartStore from "@/hooks/useCartStore";
 const Tab = () => {
   const path = usePathname();
   const { products } = useCartStore();
+  const [hasProducts, setHasProducts] = useState(false);
+
+  useEffect(() => {
+    setHasProducts(products.length > 0);
+  }, [products]);
 
   return (
     <div className="fixed bottom-0 left-0 flex h-16 w-full items-center justify-evenly border-t border-dark-200 bg-dark-100 p-2">
@@ -24,11 +29,9 @@ const Tab = () => {
         className={`relative rounded-lg p-2 ${path === "/cart" ? "bg-primary text-dark-200" : "text-primary"}`}
       >
         <BsFillBagHeartFill size={20} />
-        {
-          (products[0] && path !== '/cart') && (
-            <div className="absolute right-1 top-1 size-3 rounded-full border border-primary bg-red-600"></div>
-          )
-        }
+        {hasProducts && path !== "/cart" && (
+          <div className="absolute right-1 top-1 h-3 w-3 rounded-full border border-primary bg-red-600"></div>
+        )}
       </Link>
       <Link
         href={"/orders"}

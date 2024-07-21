@@ -13,6 +13,7 @@ import { updateReservation } from "@/utils/updateReservation";
 import { cancelReservation } from "@/utils/cancelReservation";
 import OrderSuccessBlock from "@/components/shared/OrderSuccessBlock";
 import { createNewOrder } from "@/utils/createNewOrder";
+import { TiShoppingCart } from "react-icons/ti";
 
 const page = () => {
   const { user } = useUser();
@@ -88,7 +89,7 @@ const page = () => {
             className="rounded-md bg-dark-100 p-2 text-primary"
           />
         </div>
-        {products[0] && (
+        {products.length > 0 && (
           <div className="mt-6 flex w-full flex-col border-b pb-4">
             <div className="flex w-full justify-between">
               <span>Total Amount :</span>
@@ -111,7 +112,7 @@ const page = () => {
           </div>
         )}
         <div className="mt-8 flex flex-col gap-5">
-          {products[0] ? (
+          {products.length > 0 ? (
             products.map((product) => (
               <FoodBlock
                 key={product.productId}
@@ -122,7 +123,12 @@ const page = () => {
               />
             ))
           ) : (
-            <p className="text-3xl font-extrabold text-center mt-4 text-neutral-50/50 border py-3">Cart is Empty</p>
+            <div className="mt-4 flex w-full flex-col items-center py-3 text-neutral-50/50">
+              <TiShoppingCart size={50} />
+              <p className="mt-2 text-center text-3xl font-extrabold">
+                Cart is Empty
+              </p>
+            </div>
           )}
         </div>
       </div>

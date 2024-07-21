@@ -22,7 +22,7 @@ import { updateReservation } from "@/utils/updateReservation";
 import { createNewOrder } from "@/utils/createNewOrder";
 import { cancelReservation } from "@/utils/cancelReservation";
 
-const FoodItem = ({ productId, name, price, stock, imgSrc }) => {
+const FoodItem = ({ productId, name, price, stock, imgSrc, position }) => {
   const { user } = useUser();
   const { addProduct } = useCartStore();
   const [count, setCount] = useState(1);
@@ -43,7 +43,8 @@ const FoodItem = ({ productId, name, price, stock, imgSrc }) => {
         productId,
         count,
         price,
-        name
+        name,
+        position
       },
     ];
     try {
@@ -76,6 +77,7 @@ const FoodItem = ({ productId, name, price, stock, imgSrc }) => {
         await cancelReservation(products);
       } else {
         console.error("Reservation error:", reservationResult.message);
+        alert("Not Enough Stock Available. Refresh your Page to update the Stock !!")
       }
     } catch (error) {
       console.error("Error during reservation process:", error.message);
@@ -105,7 +107,7 @@ const FoodItem = ({ productId, name, price, stock, imgSrc }) => {
           <span className="font-semibold">₹ {price}.00</span>
         </div>
         <button
-          onClick={() => addProduct(productId, 1, price, name)}
+          onClick={() => addProduct(productId, 1, price, name, position)}
           className="h-fit rounded-md bg-primary p-1 hover:bg-primary/70"
         >
           <MdOutlineAdd className="text-dark-200" size={20} />
