@@ -1,13 +1,14 @@
-"use client";
+import { cancelReservation } from "./cancelReservation";
+import { createNewOrder } from "./createNewOrder";
 import { createOrderId } from "./createOrderId";
+import { updateReservation } from "./updateReservation";
 
-export const processPayment = async (amount, user) => {
+export const processPayment = (amount, user, products) => {
   return new Promise((resolve, reject) => {
     createOrderId(amount)
       .then((orderId) => {
         if (!orderId) {
-          reject(new Error("Failed to create order ID"));
-          return;
+          throw new Error("Failed to create order ID");
         }
 
         const options = {
@@ -17,23 +18,26 @@ export const processPayment = async (amount, user) => {
           name: "Snacker",
           description: "Vend your snacks",
           order_id: orderId,
+          notes: {
+            user_id: user?.id || "",
+          },
           handler: async function (response) {
-            const data = {
-              orderCreationId: orderId,
-              razorpayPaymentId: response.razorpay_payment_id,
-              razorpayOrderId: response.razorpay_order_id,
-              razorpaySignature: response.razorpay_signature,
-            };
-
             try {
               const result = await fetch("/api/verify", {
                 method: "POST",
-                body: JSON.stringify(data),
+                body: JSON.stringify({
+                  orderCreationId: orderId,
+                  razorpayPaymentId: response.razorpay_payment_id,
+                  razorpayOrderId: response.razorpay_order_id,
+                  razorpaySignature: response.razorpay_signature,
+                }),
                 headers: { "Content-Type": "application/json" },
               });
-              console.log("Veriification checked");
+
               const res = await result.json();
               if (res.isOk) {
+                await updateReservation(products, orderId);
+                await createNewOrder(orderId, products, user, amount);
                 resolve({ ok: true, orderId });
               } else {
                 reject(new Error("Payment verification failed"));
@@ -51,21 +55,24 @@ export const processPayment = async (amount, user) => {
             color: "#3399cc",
           },
           modal: {
-            ondismiss: function () {
+            ondismiss: async function () {
+              await cancelReservation(products);
               reject(new Error("Payment was closed by the user"));
             },
           },
         };
 
         const paymentObject = new window.Razorpay(options);
-        paymentObject.on("payment.failed", function (response) {
+        paymentObject.on("payment.failed", async function (response) {
           alert(response.error.description);
+          await cancelReservation(products);
           reject(new Error("Payment failed"));
         });
+
         paymentObject.open();
       })
       .catch((error) => {
-        console.error("Error creating order ID:", error.message);
+        console.error("Error during payment process:", error.message);
         reject(error);
       });
   });
