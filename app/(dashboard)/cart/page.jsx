@@ -9,11 +9,10 @@ import { useUser } from "@clerk/nextjs";
 import Script from "next/script";
 import { reserveProduct } from "@/utils/reserveProduct";
 import { processPayment } from "@/utils/processPayment";
-import { updateReservation } from "@/utils/updateReservation";
-import { cancelReservation } from "@/utils/cancelReservation";
 import OrderSuccessBlock from "@/components/shared/OrderSuccessBlock";
-import { createNewOrder } from "@/utils/createNewOrder";
 import { TiShoppingCart } from "react-icons/ti";
+import { createNewOrder } from "@/utils/createNewOrder";
+import { useToast } from "@/components/ui/use-toast";
 
 const page = () => {
   const { user } = useUser();
@@ -24,6 +23,7 @@ const page = () => {
   const [data, setData] = useState("");
   const [open, setOpen] = useState(false);
   const [triggerReload, setTriggerReload] = useState(false);
+  const { toast } = useToast();
 
   useEffect(() => {
     const total = products.reduce(
@@ -49,15 +49,34 @@ const page = () => {
         console.log("Payment Result:", res);
 
         if (res && res.ok) {
-          setQR(res.orderId);
-          setData({ orderId: res.orderId, amount });
-          removeAll();
           setOpen(true);
+          setQR(res.orderId);
+          const order = await createNewOrder(
+            res.orderId,
+            products,
+            user,
+            amount,
+          );
+          if (order.success) {
+            setData({ orderId: res.orderId, amount });
+            removeAll();
+          } else {
+            toast({
+              title: "Order creation failed",
+              description: "Connect with the officials to manage your order",
+              variant: "destructive",
+            });
+          }
         } else {
           console.log("Payment not successful.");
         }
       } catch (error) {
         console.error("Error during payment processing:", error.message);
+        toast({
+          title: "Payment Failed",
+          description: error.message,
+          variant: "destructive",
+        });
       }
     } catch (error) {
       console.error("Error during reservation process:", error.message);

@@ -7,12 +7,14 @@ import { IoIosCloseCircle } from "react-icons/io";
 import { MdAddBox } from "react-icons/md";
 import { MdIndeterminateCheckBox } from "react-icons/md";
 import { Skeleton } from "@/components/ui/skeleton";
+import { useToast } from "../ui/use-toast";
 
 const FoodBlock = ({ id, count, triggerReload, setTriggerReload }) => {
   const [product, setProduct] = useState({});
   const [load, setLoad] = useState(true);
   const { increaseQuantity, decreaseQuantity, removeProduct } = useCartStore();
   const [warning, setWarning] = useState("");
+  const { toast } = useToast();
 
   useEffect(() => {
     getProductData(id);
@@ -27,9 +29,15 @@ const FoodBlock = ({ id, count, triggerReload, setTriggerReload }) => {
   }, [triggerReload]);
 
   useEffect(() => {
-    if (product.stock === 0) {
-      setWarning("This product is out of stock.");
-    } else if (count > product.stock) {
+    if ((product.stock - product.reserved) === 0) {
+      setWarning("Out of Stock");
+      toast({
+        title: "Stock Unavailable",
+        description:
+          "Some products in your cart are unavailable or already reserved by others",
+        variant: 'destructive'
+      });
+    } else if (count > (product.stock - product.reserved)) {
       setWarning(`Only ${product.stock} available`);
     } else {
       setWarning("");

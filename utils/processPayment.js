@@ -37,7 +37,6 @@ export const processPayment = (amount, user, products) => {
               const res = await result.json();
               if (res.isOk) {
                 await updateReservation(products, orderId);
-                await createNewOrder(orderId, products, user, amount);
                 resolve({ ok: true, orderId });
               } else {
                 reject(new Error("Payment verification failed"));

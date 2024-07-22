@@ -19,6 +19,7 @@ import Script from "next/script";
 import OrderSuccessBlock from "../shared/OrderSuccessBlock";
 import { processPayment } from "@/utils/processPayment";
 import { useToast } from "../ui/use-toast";
+import { createNewOrder } from "@/utils/createNewOrder";
 
 const FoodItem = ({ productId, name, price, stock, imgSrc, position }) => {
   const { user } = useUser();
@@ -56,7 +57,7 @@ const FoodItem = ({ productId, name, price, stock, imgSrc, position }) => {
           title: "Stock Unavailable",
           description:
             "Requested quantity exceeds stock. Please refresh the page and adjust your order.",
-          variant: 'destructive'
+          variant: "destructive",
         });
         return;
       }
@@ -65,9 +66,24 @@ const FoodItem = ({ productId, name, price, stock, imgSrc, position }) => {
         console.log("Payment Result:", res);
 
         if (res && res.ok) {
-          setQR(res.orderId);
-          setData({ orderId: res.orderId, amount });
           setOpen(true);
+          setQR(res.orderId);
+          const order = await createNewOrder(
+            res.orderId,
+            products,
+            user,
+            amount,
+          );
+          if (order.success) {
+            setData({ orderId: res.orderId, amount });
+            removeAll();
+          } else {
+            toast({
+              title: "Order creation failed",
+              description: "Connect with the officials to manage your order",
+              variant: "destructive",
+            });
+          }
         } else {
           console.log("Payment not successful.");
         }
@@ -81,16 +97,15 @@ const FoodItem = ({ productId, name, price, stock, imgSrc, position }) => {
     }
   };
 
-  const addToCart = () =>{
+  const addToCart = () => {
     console.log("called");
-      addProduct(productId, 1, price, name, position, stock);
-      toast({
-        title: "Added To Cart",
-        description:
-          `${name} has been added to your cart`,
-        className: "bg-primary text-black"
-      });
-  }
+    addProduct(productId, 1, price, name, position, stock);
+    toast({
+      title: "Added To Cart",
+      description: `${name} has been added to your cart`,
+      className: "bg-primary text-black",
+    });
+  };
 
   return (
     <div className="relative flex w-[calc(50%-0.5rem)] flex-col rounded-lg bg-dark-100 p-2 text-neutral-100 shadow">
