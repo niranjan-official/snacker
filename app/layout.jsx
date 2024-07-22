@@ -11,7 +11,21 @@ export const metadata = {
 
 export default function RootLayout({ children }) {
     return (
-        <ClerkProvider>
+        <ClerkProvider
+        appearance={{
+            variables:{
+                colorBackground: '#362c36',
+                colorText: '#FFFFFF',
+                colorTextSecondary: '#FFFFFF',
+                colorTextOnPrimaryBackground: '#FFFFFF',
+                colorWarning: '#FFFFFF',
+                colorDanger: '#FFFFFF',
+                colorNeutral: '#FFFFFF',
+                colorPrimary: '#FFFFFF',
+                colorSuccess: '#FFFFFF',
+                colorShimmer: '#FFFFFF',   
+            }
+        }}>
             <html lang="en">
                 <body className={poppins.className}>{children}</body>
             </html>
