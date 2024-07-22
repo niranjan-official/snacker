@@ -1,14 +1,22 @@
-import { cancelReservation } from "./cancelReservation";
-import { createNewOrder } from "./createNewOrder";
 import { createOrderId } from "./createOrderId";
-import { updateReservation } from "./updateReservation";
+import { cancelReservation } from "./cancelReservation";
 
-export const processPayment = (amount, user, products) => {
+export const processPayment = async (amount, user, products) => {
+  let isSuccessful = false;
+  let isReservationCancelled = false;
+
+  const cancelIfNeeded = async () => {
+    if (!isSuccessful && !isReservationCancelled) {
+      isReservationCancelled = true;
+      await cancelReservation(products);
+    }
+  };
+
   return new Promise((resolve, reject) => {
     createOrderId(amount)
       .then((orderId) => {
         if (!orderId) {
-          throw new Error("Failed to create order ID");
+          return reject(new Error("Failed to create order ID"));
         }
 
         const options = {
@@ -18,32 +26,31 @@ export const processPayment = (amount, user, products) => {
           name: "Snacker",
           description: "Vend your snacks",
           order_id: orderId,
-          notes: {
-            user_id: user?.id || "",
-          },
           handler: async function (response) {
+            const data = {
+              orderCreationId: orderId,
+              razorpayPaymentId: response.razorpay_payment_id,
+              razorpayOrderId: response.razorpay_order_id,
+              razorpaySignature: response.razorpay_signature,
+            };
+
             try {
               const result = await fetch("/api/verify", {
                 method: "POST",
-                body: JSON.stringify({
-                  orderCreationId: orderId,
-                  razorpayPaymentId: response.razorpay_payment_id,
-                  razorpayOrderId: response.razorpay_order_id,
-                  razorpaySignature: response.razorpay_signature,
-                }),
+                body: JSON.stringify(data),
                 headers: { "Content-Type": "application/json" },
               });
-
               const res = await result.json();
               if (res.isOk) {
-                await updateReservation(products, orderId);
-                resolve({ ok: true, orderId });
+                isSuccessful = true;
+                return resolve({ ok: true, orderId });
               } else {
-                reject(new Error("Payment verification failed"));
+                throw new Error("Payment verification failed");
               }
             } catch (error) {
               console.error("Error verifying payment:", error.message);
-              reject(error);
+              await cancelIfNeeded();
+              return reject(error);
             }
           },
           prefill: {
@@ -55,24 +62,30 @@ export const processPayment = (amount, user, products) => {
           },
           modal: {
             ondismiss: async function () {
-              await cancelReservation(products);
-              reject(new Error("Payment was closed by the user"));
+              await cancelIfNeeded();
+              return reject(new Error("Payment was closed by the user"));
             },
+          },
+          retry: {
+            enabled: false,
           },
         };
 
         const paymentObject = new window.Razorpay(options);
         paymentObject.on("payment.failed", async function (response) {
           alert(response.error.description);
-          await cancelReservation(products);
-          reject(new Error("Payment failed"));
+          await cancelIfNeeded();
+          return reject(new Error("Payment failed"));
         });
-
         paymentObject.open();
       })
-      .catch((error) => {
-        console.error("Error during payment process:", error.message);
-        reject(error);
+      .catch(async (error) => {
+        console.error("Error creating order ID:", error.message);
+        await cancelIfNeeded();
+        return reject(error);
       });
+  }).catch(async (error) => {
+    await cancelIfNeeded();
+    throw error;
   });
 };

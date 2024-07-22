@@ -11,8 +11,8 @@ import { reserveProduct } from "@/utils/reserveProduct";
 import { processPayment } from "@/utils/processPayment";
 import OrderSuccessBlock from "@/components/shared/OrderSuccessBlock";
 import { TiShoppingCart } from "react-icons/ti";
-import { createNewOrder } from "@/utils/createNewOrder";
 import { useToast } from "@/components/ui/use-toast";
+import { updateReservation } from "@/utils/updateReservation";
 
 const page = () => {
   const { user } = useUser();
@@ -41,29 +41,35 @@ const page = () => {
 
       if (!reservationResult.success) {
         console.error("Reservation error:", reservationResult.message);
+        toast({
+          title: "Reservation Failed",
+          description: reservationResult.message,
+          variant: "destructive",
+        });
         setTriggerReload(true);
         return;
       }
+
       try {
         const res = await processPayment(amount, user, products);
         console.log("Payment Result:", res);
 
         if (res && res.ok) {
           setOpen(true);
-          setQR(res.orderId);
-          const order = await createNewOrder(
+          const updation = await updateReservation(
             res.orderId,
             products,
             user,
             amount,
           );
-          if (order.success) {
+          if (updation.success) {
+            setQR(res.orderId);
             setData({ orderId: res.orderId, amount });
             removeAll();
           } else {
             toast({
-              title: "Order creation failed",
-              description: "Connect with the officials to manage your order",
+              title: "Updation Failed",
+              description: updation.message,
               variant: "destructive",
             });
           }
@@ -80,6 +86,11 @@ const page = () => {
       }
     } catch (error) {
       console.error("Error during reservation process:", error.message);
+      toast({
+        title: "Reservation Error",
+        description: error.message,
+        variant: "destructive",
+      });
     } finally {
       setButtonLoad(false);
     }

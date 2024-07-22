@@ -1,4 +1,22 @@
-export const updateReservation = async (products, orderId) => {
+import { createNewOrder } from "./createNewOrder";
+
+export const updateReservation = async (orderId, products, user, amount) => {
+  try {
+    const [updationStatus, orderStatus] = await Promise.all([
+      updation(products),
+      createNewOrder(orderId, products, user, amount),
+    ]);
+    if (updationStatus.success && orderStatus.success) {
+      return { success: true };
+    } else {
+      return { success: false, error: "unknown" };
+    }
+  } catch (error) {
+    return { success: false, error: error.message };
+  }
+};
+
+const updation = async (products) => {
   try {
     const res = await fetch(`/api/update-reservation`, {
       method: "POST",
