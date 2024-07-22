@@ -107,7 +107,7 @@ const FoodItem = ({ productId, name, price, stock, imgSrc, position }) => {
           <span className="font-semibold">₹ {price}.00</span>
         </div>
         <button
-          onClick={() => addProduct(productId, 1, price, name, position)}
+          onClick={() => addProduct(productId, 1, price, name, position, stock)}
           className="h-fit rounded-md bg-primary p-1 hover:bg-primary/70"
         >
           <MdOutlineAdd className="text-dark-200" size={20} />

@@ -17,7 +17,7 @@ const saveCartToLocalStorage = (cart) => {
 const useCartStore = create((set) => ({
   products: getCartFromLocalStorage(),
 
-  addProduct: (productId, count, price, name, position) =>
+  addProduct: (productId, count, price, name, position, stock) =>
     set((state) => {
       const existingProduct = state.products.find(
         (product) => product.productId === productId,
@@ -26,7 +26,7 @@ const useCartStore = create((set) => ({
 
       if (existingProduct) {
         updatedProducts = state.products.map((product) =>
-          product.productId === productId
+          ((product.productId === productId) && (product.count < stock))
             ? { ...product, count: product.count + count }
             : product,
         );
