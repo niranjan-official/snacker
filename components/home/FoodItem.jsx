@@ -18,9 +18,7 @@ import { reserveProduct } from "@/utils/reserveProduct";
 import Script from "next/script";
 import OrderSuccessBlock from "../shared/OrderSuccessBlock";
 import { processPayment } from "@/utils/processPayment";
-import { updateReservation } from "@/utils/updateReservation";
-import { createNewOrder } from "@/utils/createNewOrder";
-import { cancelReservation } from "@/utils/cancelReservation";
+import { useToast } from "../ui/use-toast";
 
 const FoodItem = ({ productId, name, price, stock, imgSrc, position }) => {
   const { user } = useUser();
@@ -31,6 +29,7 @@ const FoodItem = ({ productId, name, price, stock, imgSrc, position }) => {
   const [QR, setQR] = useState("");
   const [data, setData] = useState("");
   const [open, setOpen] = useState(false);
+  const { toast } = useToast();
 
   useEffect(() => {
     setAmount(price * count);
@@ -44,40 +43,36 @@ const FoodItem = ({ productId, name, price, stock, imgSrc, position }) => {
         count,
         price,
         name,
-        position
+        position,
       },
     ];
     try {
       const reservationResult = await reserveProduct(products);
       console.log("Reservation Result:", reservationResult);
 
-      if (reservationResult.success) {
-        try {
-          const res = await processPayment(amount, user);
-          console.log("Payment Result:", res);
-
-          if (res && res.ok) {
-            setOpen(true);
-
-            const result = await updateReservation(products, res.orderId);
-            console.log("Update Reservation Result:", result);
-
-            if (result.success) {
-              setQR(res.orderId);
-              await createNewOrder(res.orderId, products, user, amount);
-              setData({ orderId: res.orderId, amount });
-              return;
-            }
-          } else {
-            console.log("Payment not successful. Triggering cancellation.");
-          }
-        } catch (error) {
-          console.error("Error during payment processing:", error.message);
-        }
-        await cancelReservation(products);
-      } else {
+      if (!reservationResult.success) {
         console.error("Reservation error:", reservationResult.message);
-        alert("Not Enough Stock Available. Refresh your Page to update the Stock !!")
+        toast({
+          title: "Stock Unavailable",
+          description:
+            "Requested quantity exceeds stock. Please refresh the page and adjust your order.",
+          variant: 'destructive'
+        });
+        return;
+      }
+      try {
+        const res = await processPayment(amount, user, products);
+        console.log("Payment Result:", res);
+
+        if (res && res.ok) {
+          setQR(res.orderId);
+          setData({ orderId: res.orderId, amount });
+          setOpen(true);
+        } else {
+          console.log("Payment not successful.");
+        }
+      } catch (error) {
+        console.error("Error during payment processing:", error.message);
       }
     } catch (error) {
       console.error("Error during reservation process:", error.message);
@@ -85,6 +80,17 @@ const FoodItem = ({ productId, name, price, stock, imgSrc, position }) => {
       setButtonLoad(false);
     }
   };
+
+  const addToCart = () =>{
+    console.log("called");
+      addProduct(productId, 1, price, name, position, stock);
+      toast({
+        title: "Added To Cart",
+        description:
+          `${name} has been added to your cart`,
+        className: "bg-primary text-black"
+      });
+  }
 
   return (
     <div className="relative flex w-[calc(50%-0.5rem)] flex-col rounded-lg bg-dark-100 p-2 text-neutral-100 shadow">
@@ -107,7 +113,7 @@ const FoodItem = ({ productId, name, price, stock, imgSrc, position }) => {
           <span className="font-semibold">₹ {price}.00</span>
         </div>
         <button
-          onClick={() => addProduct(productId, 1, price, name, position, stock)}
+          onClick={addToCart}
           className="h-fit rounded-md bg-primary p-1 hover:bg-primary/70"
         >
           <MdOutlineAdd className="text-dark-200" size={20} />
@@ -115,7 +121,7 @@ const FoodItem = ({ productId, name, price, stock, imgSrc, position }) => {
       </div>
       <Dialog>
         <DialogTrigger asChild>
-          <button className="mt-2 w-full rounded-md bg-primary p-1 font-bold text-dark-200 hover:bg-primary/70">
+          <button className="mt-2 w-full rounded-md bg-yellow-400 p-1 font-bold text-dark-200 hover:bg-primary/70">
             Buy Now
           </button>
         </DialogTrigger>
@@ -150,7 +156,7 @@ const FoodItem = ({ productId, name, price, stock, imgSrc, position }) => {
                 <button
                   disabled={buttonLoad}
                   onClick={purchaseProduct}
-                  className="mt-2 flex w-full items-center justify-center rounded-lg bg-primary p-3 py-2 font-bold text-dark-200 shadow hover:bg-primary/60 disabled:bg-primary/70"
+                  className="mt-2 flex w-full items-center justify-center rounded-lg bg-yellow-400 p-3 py-2 font-bold text-dark-200 shadow hover:bg-primary/60 disabled:bg-primary/70"
                 >
                   {buttonLoad ? (
                     <VscLoading

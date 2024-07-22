@@ -36,38 +36,30 @@ const page = () => {
   const purchaseProduct = async () => {
     setButtonLoad(true);
     try {
-      // Step 1: Reserve the product
       const reservationResult = await reserveProduct(products);
       console.log("Reservation Result:", reservationResult);
-  
+
       if (!reservationResult.success) {
         console.error("Reservation error:", reservationResult.message);
         setTriggerReload(true);
         return;
       }
-  
-      // Step 2: Process payment
       try {
         const res = await processPayment(amount, user, products);
         console.log("Payment Result:", res);
-  
+
         if (res && res.ok) {
-          // Payment was successful
           setQR(res.orderId);
-          // await createNewOrder(res.orderId, products, user, amount);
           setData({ orderId: res.orderId, amount });
           removeAll();
           setOpen(true);
         } else {
-          // Handle the case where processPayment indicates failure
           console.log("Payment not successful.");
         }
       } catch (error) {
-        // Error during payment processing
         console.error("Error during payment processing:", error.message);
       }
     } catch (error) {
-      // Error during reservation process
       console.error("Error during reservation process:", error.message);
     } finally {
       setButtonLoad(false);

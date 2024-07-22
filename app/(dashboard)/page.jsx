@@ -35,7 +35,7 @@ export default async function Home() {
           size={30}
           className="rounded-md bg-dark-100 p-1 text-primary"
         />
-        <UserProfileButton/>
+        <UserProfileButton />
       </div>
       <p className="mt-4">
         Hi{" "}
