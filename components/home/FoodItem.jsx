@@ -108,12 +108,12 @@ const FoodItem = ({ productId, name, price, stock, imgSrc, position }) => {
         id="razorpay-checkout-js"
         src="https://checkout.razorpay.com/v1/checkout.js"
       />
-      <div className="aspect-square w-full bg-gray-600">
+      <div className="aspect-square w-full bg-gray-600 rounded-md">
         <Image
           src={imgSrc}
           width={200}
           height={200}
-          className="h-full w-auto"
+          className="h-full w-auto rounded-md"
           alt={productId}
         />
       </div>

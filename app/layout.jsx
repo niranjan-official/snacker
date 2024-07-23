@@ -3,6 +3,7 @@ import "./globals.css";
 import { ClerkProvider } from "@clerk/nextjs";
 import { dark } from "@clerk/themes";
 import { Toaster } from "@/components/ui/toaster";
+import Head from "next/head";
 
 const poppins = Poppins({ subsets: ["latin"], weight: "400" });
 
@@ -22,6 +23,9 @@ export default function RootLayout({ children }) {
       }}
     >
       <html lang="en">
+        <Head>
+          <link rel="icon" href="/favicon.ico" sizes="any" />
+        </Head>
         <body>
           <main>{children}</main>
           <Toaster />
