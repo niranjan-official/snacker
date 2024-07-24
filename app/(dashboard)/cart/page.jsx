@@ -34,6 +34,19 @@ const page = () => {
   }, [products]);
 
   const purchaseProduct = async () => {
+    const totalQuantity = products.reduce(
+      (acc, product) => acc + product.count,
+      0,
+    );
+
+    if (totalQuantity > 4) {
+      toast({
+        title: "Too Many Products",
+        description: "You can only purchase a maximum of four items in total.",
+        variant: "destructive",
+      });
+      return;
+    }
     setButtonLoad(true);
     try {
       const reservationResult = await reserveProduct(products);

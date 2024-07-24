@@ -157,7 +157,7 @@ const FoodItem = ({ productId, name, price, stock, imgSrc, position }) => {
                   </button>
                   <span className="tabular-nums">{count}</span>
                   <button
-                    onClick={() => setCount(count < stock ? count + 1 : count)}
+                    onClick={() => setCount(count < 4 ? count + 1 : count)}
                     className="h-fit text-neutral-100"
                   >
                     <MdAddBox size={23} />
