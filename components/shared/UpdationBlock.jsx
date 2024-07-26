@@ -21,7 +21,7 @@ const UpdationBlock = ({ onUpdation }) => {
               🛑 Maintenance 🛑
             </AlertDialogTitle>
             <AlertDialogDescription className="text-neutral-200 text-lg">
-            We're updating stock information. Service may be briefly interrupted. Please check back soon.
+            The payment section is currently under maintenance and yet to be verified by the college. Please check back later.
             </AlertDialogDescription>
           </AlertDialogHeader>
         </AlertDialogContent>
