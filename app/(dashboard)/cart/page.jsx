@@ -12,16 +12,18 @@ import { TiShoppingCart } from "react-icons/ti";
 import { useToast } from "@/components/ui/use-toast";
 import { checkAvailablity } from "@/utils/checkAvailablity";
 import { createOrder } from "@/utils/createOrder";
+import CreditBlock from "@/components/shared/CreditBlock";
 
 const page = () => {
   const { user } = useUser();
-  const { products, removeAll } = useCartStore();
+  const { products, removeAll, updateCredit } = useCartStore();
   const [amount, setAmount] = useState(0);
   const [buttonLoad, setButtonLoad] = useState(false);
   const [QR, setQR] = useState("");
   const [data, setData] = useState("");
   const [open, setOpen] = useState(false);
   const [triggerReload, setTriggerReload] = useState(false);
+  const [openWallet, setOpenWallet] = useState(false);
   const { toast } = useToast();
 
   useEffect(() => {
@@ -72,6 +74,7 @@ const page = () => {
           description: "Please recharge your wallet to proceed with the order.",
           variant: "destructive",
         });
+        setOpenWallet(true);
       } else if (available.insufficientStock) {
         toast({
           title: "Out of Stock",
@@ -157,7 +160,7 @@ const page = () => {
           )}
         </div>
       </div>
-
+      <CreditBlock open={openWallet} setOpen={setOpenWallet} />
       <OrderSuccessBlock open={open} setOpen={setOpen} QR={QR} data={data} />
     </div>
   );

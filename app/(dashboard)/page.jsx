@@ -5,8 +5,6 @@ import { db } from "@/firebase/config";
 import { currentUser } from "@clerk/nextjs/server";
 import {
   collection,
-  doc,
-  getDoc,
   getDocs,
   query,
   where,
@@ -31,30 +29,9 @@ const getProductList = async () => {
   }
 };
 
-const getCredit = async (userId) => {
-  try {
-    const docRef = doc(db, "users", userId);
-    const docSnap = await getDoc(docRef);
-
-    if (docSnap.exists()) {
-      console.log("Document data:", docSnap.data());
-      const data = docSnap.data();
-      return data.credit;
-    } else {
-      console.log("No such document!");
-    }
-  } catch (e) {
-    console.log(e.message);
-  }
-  return null;
-};
-
 export default async function Home() {
   const { username, id } = await currentUser();
-  const [products, credit] = await Promise.all([
-    getProductList(),
-    getCredit(id),
-  ]);
+  const products = await getProductList();
 
   return (
     <div className="min-h-screen w-full p-6 pb-20">
@@ -73,7 +50,7 @@ export default async function Home() {
             <span className="text-xl">👋</span>
           </span>
         </p>
-        <Credit credit={credit} />
+        <Credit userId={id} />
       </div>
       <ItemList products={products} />
     </div>

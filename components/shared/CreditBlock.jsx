@@ -32,6 +32,7 @@ const CreditBlock = ({ open, setOpen }) => {
       }, 3000);
       const res = await processPayment(amount, user);
       if (res.ok) {
+        setOpen(true);
         const result = await updateUserCredit(user.id, res.orderId, amount);
         if (result.success) {
           console.log("Credit updation successfull");
