@@ -48,22 +48,51 @@ const page = () => {
     }
     setButtonLoad(true);
 
-      try {
-        const available = await checkAvailablity(products, user.id, amount);
-        if(available){
-          setOpen(true);
-          const res = await createOrder(products, user.id, amount);
-          if(res.success){
-            setQR(res.orderId);
-            setData({orderId: res.orderId,amount});
-            removeAll();
-          }
+    try {
+      const available = await checkAvailablity(products, user.id, amount);
+      if (available.success) {
+        setOpen(true);
+        const res = await createOrder(products, user.id, amount);
+        if (res.success) {
+          setQR(res.orderId);
+          setData({ orderId: res.orderId, amount });
+          updateCredit(-amount);
+          removeAll();
+        } else {
+          toast({
+            title: "Order Creation Failed",
+            description:
+              "There was an issue while creating your order. Please try again.",
+            variant: "destructive",
+          });
         }
+      } else if (available.insufficientCredit) {
+        toast({
+          title: "Insufficient Wallet Balance",
+          description: "Please recharge your wallet to proceed with the order.",
+          variant: "destructive",
+        });
+      } else if (available.insufficientStock) {
+        toast({
+          title: "Out of Stock",
+          description:
+            "One or more products in your cart are currently out of stock. Please adjust your cart.",
+          variant: "destructive",
+        });
+        setTriggerReload(true);
+      } else {
+        toast({
+          title: "Error",
+          description:
+            available.error ||
+            "An unknown error occurred. Please try again later.",
+          variant: "destructive",
+        });
+      }
     } catch (error) {
-      console.error("Error during reservation process:", error.message);
       toast({
-        title: "Error Occured",
-        description: error.message,
+        title: "Unexpected Error",
+        description: "An unexpected error occurred. Please try again later.",
         variant: "destructive",
       });
     } finally {

@@ -14,8 +14,11 @@ import { processPayment } from "@/utils/processPayment";
 import { useUser } from "@clerk/nextjs";
 import { useToast } from "../ui/use-toast";
 import { updateUserCredit } from "@/utils/updateUserCredit";
+import useCartStore from "@/hooks/useCartStore";
 
 const CreditBlock = ({ open, setOpen }) => {
+
+  const {updateCredit} = useCartStore();
   const [amount, setAmount] = useState(0);
   const [loading, setLoading] = useState(false);
   const { user } = useUser();
@@ -24,12 +27,15 @@ const CreditBlock = ({ open, setOpen }) => {
   const handleRecharge = async () => {
     setLoading(true);
     try {
+      setTimeout(() => {
+        setOpen(false);
+      }, 3000);
       const res = await processPayment(amount, user);
       if (res.ok) {
         const result = await updateUserCredit(user.id, res.orderId, amount);
         if (result.success) {
           console.log("Credit updation successfull");
-          setOpen(false);
+          updateCredit(amount);
           toast({
             title: "Payment Sucessfull",
             description: `${amount}rs have been successfully added to your wallet`,

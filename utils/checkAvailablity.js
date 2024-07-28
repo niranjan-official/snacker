@@ -8,12 +8,17 @@ export const checkAvailablity = async (products, userId, amount) => {
       },
     });
     const data = await res.json();
-    if(data.success){
-        return true;
-    }else{
-        console.log(data.error);
+    if (data.success) {
+      return { success: true };
+    } else if (data.insufficientCredit) {
+      return { success: false, insufficientCredit: true };
+    } else if (data.insufficientStock) {
+      return { success: false, insufficientStock: true };
+    } else {
+      return { success: false, error: data.error };
     }
   } catch (error) {
     console.log(error.message);
+    return { success: false, error: error.message };
   }
 };

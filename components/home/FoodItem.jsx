@@ -4,7 +4,6 @@ import React, { useEffect, useState } from "react";
 import {
   MdAddBox,
   MdIndeterminateCheckBox,
-  MdOutlineAdd,
 } from "react-icons/md";
 import {
   Dialog,
@@ -19,10 +18,11 @@ import OrderSuccessBlock from "../shared/OrderSuccessBlock";
 import { useToast } from "../ui/use-toast";
 import { checkAvailablity } from "@/utils/checkAvailablity";
 import { createOrder } from "@/utils/createOrder";
+import { FaCartPlus } from "react-icons/fa";
 
 const FoodItem = ({ productId, name, price, stock, imgSrc, position }) => {
   const { user } = useUser();
-  const { addProduct } = useCartStore();
+  const { addProduct, updateCredit } = useCartStore();
   const [count, setCount] = useState(1);
   const [amount, setAmount] = useState(0);
   const [buttonLoad, setButtonLoad] = useState(false);
@@ -50,12 +50,13 @@ const FoodItem = ({ productId, name, price, stock, imgSrc, position }) => {
 
       try {
         const available = await checkAvailablity(products, user.id, amount);
-        if(available){
+        if(available.success){
           setOpen(true);
           const res = await createOrder(products, user.id, amount);
           if(res.success){
             setQR(res.orderId);
             setData({orderId:res.orderId,amount});
+            updateCredit(-amount);
           }else{
             toast({
               title: "Error Occured",
@@ -63,6 +64,27 @@ const FoodItem = ({ productId, name, price, stock, imgSrc, position }) => {
               variant: "destructive",
             });
           }
+        } else if (available.insufficientCredit) {
+          toast({
+            title: "Insufficient Wallet Balance",
+            description: "Please recharge your wallet to proceed with the order.",
+            variant: "destructive",
+          });
+        } else if (available.insufficientStock) {
+          toast({
+            title: "Out of Stock",
+            description:
+              "This product is currently out of stock.",
+            variant: "destructive",
+          });
+        } else {
+          toast({
+            title: "Error",
+            description:
+              available.error ||
+              "An unknown error occurred. Please try again later.",
+            variant: "destructive",
+          });
         }
     } catch (error) {
       console.error("Error during reservation process:", error.message);
@@ -77,7 +99,6 @@ const FoodItem = ({ productId, name, price, stock, imgSrc, position }) => {
   };
 
   const addToCart = () => {
-    console.log("called");
     addProduct(productId, 1, price, name, position, stock);
     toast({
       title: "Added To Cart",
@@ -110,7 +131,7 @@ const FoodItem = ({ productId, name, price, stock, imgSrc, position }) => {
           onClick={addToCart}
           className="h-fit rounded-md bg-primary p-1 hover:bg-primary/70"
         >
-          <MdOutlineAdd className="text-dark-200" size={20} />
+          <FaCartPlus className="text-dark-200" size={20} />
         </button>
       </div>
       <Dialog>
@@ -141,7 +162,7 @@ const FoodItem = ({ productId, name, price, stock, imgSrc, position }) => {
                   </button>
                   <span className="tabular-nums">{count}</span>
                   <button
-                    onClick={() => setCount(count < 4 ? count + 1 : count)}
+                    onClick={() => setCount((count < 4 && count < stock) ? count + 1 : count)}
                     className="h-fit text-neutral-100"
                   >
                     <MdAddBox size={23} />

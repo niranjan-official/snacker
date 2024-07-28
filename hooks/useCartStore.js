@@ -16,6 +16,10 @@ const saveCartToLocalStorage = (cart) => {
 
 const useCartStore = create((set) => ({
   products: getCartFromLocalStorage(),
+  credit: 0,
+
+  setCredit: (newCredit) => set({ credit: newCredit }),
+  updateCredit: (amount) => set((state) => ({ credit: state.credit + amount })),
 
   addProduct: (productId, count, price, name, position) =>
     set((state) => {

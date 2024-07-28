@@ -29,15 +29,15 @@ const FoodBlock = ({ id, count, triggerReload, setTriggerReload }) => {
   }, [triggerReload]);
 
   useEffect(() => {
-    if ((product.stock - product.reserved) === 0) {
+    if ((product.stock) === 0) {
       setWarning("Out of Stock");
       toast({
         title: "Stock Unavailable",
         description:
-          "Some products in your cart are unavailable or already reserved by others",
+          "Some products in your cart are unavailable",
         variant: 'destructive'
       });
-    } else if (count > (product.stock - product.reserved)) {
+    } else if (count > product.stock) {
       setWarning(`Only ${product.stock} available`);
     } else {
       setWarning("");

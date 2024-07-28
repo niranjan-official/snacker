@@ -7,20 +7,18 @@ export async function POST(req) {
   const { products, userId, amount } = data;
 
   try {
-    await runTransaction(db, async (transaction) => {
-      // Retrieve user document
+    const result = await runTransaction(db, async (transaction) => {
       const userRef = doc(db, "users", userId);
       const userDoc = await transaction.get(userRef);
 
       if (!userDoc.exists()) {
         throw new Error("User does not exist");
       }
-      console.log(userDoc.data());
 
       const userCredits = userDoc.data().credit;
 
       if (userCredits < amount) {
-        throw new Error("Insufficient credits");
+        throw new Error("insufficientCredit");
       }
 
       // Retrieve product documents in parallel
@@ -39,7 +37,7 @@ export async function POST(req) {
         const newStock = productData.stock - product.count;
 
         if (newStock < 0) {
-          throw new Error(`Insufficient stock for product ${productRef.id}`);
+          throw new Error("insufficientStock");
         }
 
         transaction.update(productRef, {
@@ -60,7 +58,14 @@ export async function POST(req) {
       message: "Updation and credits updated successfully",
     });
   } catch (e) {
-    console.error("Error updating reservation:", e.message);
-    return NextResponse.json({ success: false, error: e.message });
+    console.error("Error buying products:", e.message);
+
+    if (e.message === "insufficientCredit") {
+      return NextResponse.json({ success: false, insufficientCredit: true });
+    } else if (e.message === "insufficientStock") {
+      return NextResponse.json({ success: false, insufficientCredit: false, insufficientStock: true });
+    }
+
+    return NextResponse.json({ success: false, insufficientCredit: false, insufficientStock: false, error: e.message });
   }
 }

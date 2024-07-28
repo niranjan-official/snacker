@@ -9,6 +9,7 @@ import useCartStore from "@/hooks/useCartStore";
 import { ref, onValue } from "firebase/database";
 import { rtdb } from "@/firebase/config";
 import UpdationBlock from "./UpdationBlock";
+import { RiShoppingCartFill } from "react-icons/ri";
 
 const Tab = () => {
   const path = usePathname();
@@ -49,7 +50,7 @@ const Tab = () => {
         href={"/cart"}
         className={`relative rounded-lg p-2 ${path === "/cart" ? "bg-primary text-dark-200" : "text-primary"}`}
       >
-        <BsFillBagHeartFill size={20} />
+        <RiShoppingCartFill size={20} />
         {hasProducts && path !== "/cart" && (
           <div className="absolute right-1 top-1 h-3 w-3 rounded-full border border-primary bg-red-600"></div>
         )}
