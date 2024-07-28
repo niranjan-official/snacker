@@ -19,6 +19,9 @@ import { useToast } from "../ui/use-toast";
 import { checkAvailablity } from "@/utils/checkAvailablity";
 import { createOrder } from "@/utils/createOrder";
 import { FaCartPlus } from "react-icons/fa";
+import { Inter } from "next/font/google";
+
+const inter = Inter({ subsets: ["latin"]});
 
 const FoodItem = ({ productId, name, price, stock, imgSrc, position }) => {
   const { user } = useUser();
@@ -124,7 +127,7 @@ const FoodItem = ({ productId, name, price, stock, imgSrc, position }) => {
       </div>
       <div className="flex items-center justify-between">
         <div>
-          <h3 className="mt-2">{name}</h3>
+          <h3 className={`${inter.className} mt-2`}>{name}</h3>
           <span className="font-semibold">₹ {price}.00</span>
         </div>
         <button
