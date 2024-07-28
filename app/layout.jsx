@@ -19,6 +19,7 @@ export default function RootLayout({ children }) {
         baseTheme: dark,
         layout: {
           socialButtonsVariant: "iconButton",
+          termsPageUrl: 'snacker.in.net/privacy'
         },
       }}
     >

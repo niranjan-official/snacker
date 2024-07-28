@@ -1,17 +1,6 @@
 import { createOrderId } from "./createOrderId";
-import { cancelReservation } from "./cancelReservation";
 
-export const processPayment = async (amount, user, products) => {
-  let isSuccessful = false;
-  let isReservationCancelled = false;
-
-  const cancelIfNeeded = async () => {
-    if (!isSuccessful && !isReservationCancelled) {
-      isReservationCancelled = true;
-      await cancelReservation(products);
-    }
-  };
-
+export const processPayment = async (amount, user) => {
   return new Promise((resolve, reject) => {
     createOrderId(amount)
       .then((orderId) => {
@@ -42,14 +31,12 @@ export const processPayment = async (amount, user, products) => {
               });
               const res = await result.json();
               if (res.isOk) {
-                isSuccessful = true;
                 return resolve({ ok: true, orderId });
               } else {
                 throw new Error("Payment verification failed");
               }
             } catch (error) {
               console.error("Error verifying payment:", error.message);
-              await cancelIfNeeded();
               return reject(error);
             }
           },
@@ -58,11 +45,10 @@ export const processPayment = async (amount, user, products) => {
             email: user?.primaryEmailAddress?.emailAddress || "",
           },
           theme: {
-            color: "#3399cc",
+            color: "#191919",
           },
           modal: {
             ondismiss: async function () {
-              await cancelIfNeeded();
               return reject(new Error("Payment was closed by the user"));
             },
           },
@@ -74,18 +60,15 @@ export const processPayment = async (amount, user, products) => {
         const paymentObject = new window.Razorpay(options);
         paymentObject.on("payment.failed", async function (response) {
           alert(response.error.description);
-          await cancelIfNeeded();
           return reject(new Error("Payment failed"));
         });
         paymentObject.open();
       })
       .catch(async (error) => {
         console.error("Error creating order ID:", error.message);
-        await cancelIfNeeded();
         return reject(error);
       });
   }).catch(async (error) => {
-    await cancelIfNeeded();
     throw error;
   });
 };

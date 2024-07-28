@@ -7,12 +7,11 @@ import FoodBlock from "@/components/cart/FoodBlock";
 import { VscLoading } from "react-icons/vsc";
 import { useUser } from "@clerk/nextjs";
 import Script from "next/script";
-import { reserveProduct } from "@/utils/reserveProduct";
-import { processPayment } from "@/utils/processPayment";
 import OrderSuccessBlock from "@/components/shared/OrderSuccessBlock";
 import { TiShoppingCart } from "react-icons/ti";
 import { useToast } from "@/components/ui/use-toast";
-import { updateReservation } from "@/utils/updateReservation";
+import { checkAvailablity } from "@/utils/checkAvailablity";
+import { createOrder } from "@/utils/createOrder";
 
 const page = () => {
   const { user } = useUser();
@@ -48,59 +47,22 @@ const page = () => {
       return;
     }
     setButtonLoad(true);
-    try {
-      const reservationResult = await reserveProduct(products);
-      console.log("Reservation Result:", reservationResult);
-
-      if (!reservationResult.success) {
-        console.error("Reservation error:", reservationResult.message);
-        toast({
-          title: "Reservation Failed",
-          description: reservationResult.message,
-          variant: "destructive",
-        });
-        setTriggerReload(true);
-        return;
-      }
 
       try {
-        const res = await processPayment(amount, user, products);
-        console.log("Payment Result:", res);
-
-        if (res && res.ok) {
+        const available = await checkAvailablity(products, user.id, amount);
+        if(available){
           setOpen(true);
-          const updation = await updateReservation(
-            res.orderId,
-            products,
-            user,
-            amount,
-          );
-          if (updation.success) {
+          const res = await createOrder(products, user.id, amount);
+          if(res.success){
             setQR(res.orderId);
-            setData({ orderId: res.orderId, amount });
+            setData({orderId: res.orderId,amount});
             removeAll();
-          } else {
-            toast({
-              title: "Updation Failed",
-              description: updation.message,
-              variant: "destructive",
-            });
           }
-        } else {
-          console.log("Payment not successful.");
         }
-      } catch (error) {
-        console.error("Error during payment processing:", error.message);
-        toast({
-          title: "Payment Failed",
-          description: error.message,
-          variant: "destructive",
-        });
-      }
     } catch (error) {
       console.error("Error during reservation process:", error.message);
       toast({
-        title: "Reservation Error",
+        title: "Error Occured",
         description: error.message,
         variant: "destructive",
       });

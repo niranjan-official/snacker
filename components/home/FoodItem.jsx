@@ -14,17 +14,15 @@ import {
 } from "@/components/ui/dialog";
 import { VscLoading } from "react-icons/vsc";
 import { useUser } from "@clerk/nextjs";
-import { reserveProduct } from "@/utils/reserveProduct";
 import Script from "next/script";
 import OrderSuccessBlock from "../shared/OrderSuccessBlock";
-import { processPayment } from "@/utils/processPayment";
 import { useToast } from "../ui/use-toast";
-import { updateReservation } from "@/utils/updateReservation";
-import { cancelReservation } from "@/utils/cancelReservation";
+import { checkAvailablity } from "@/utils/checkAvailablity";
+import { createOrder } from "@/utils/createOrder";
 
 const FoodItem = ({ productId, name, price, stock, imgSrc, position }) => {
   const { user } = useUser();
-  const { addProduct, removeAll } = useCartStore();
+  const { addProduct } = useCartStore();
   const [count, setCount] = useState(1);
   const [amount, setAmount] = useState(0);
   const [buttonLoad, setButtonLoad] = useState(false);
@@ -48,45 +46,31 @@ const FoodItem = ({ productId, name, price, stock, imgSrc, position }) => {
         position,
       },
     ];
+    setButtonLoad(true);
 
-    let reservationResult;
-    try {
-      reservationResult = await reserveProduct(products);
-      if (!reservationResult.success) {
-        throw new Error(reservationResult.message);
-      }
-      const paymentResult = await processPayment(amount, user, products);
-      setOpen(true);
-      if (paymentResult && paymentResult.ok) {
-        const updation = await updateReservation(
-          paymentResult.orderId,
-          products,
-          user,
-          amount,
-        );
-        if (updation.success) {
-          setQR(paymentResult.orderId);
-          setData({ orderId: paymentResult.orderId, amount });
-        } else {
-          toast({
-            title: "Updation Failed",
-            description: updation.message,
-            variant: "destructive",
-          });
+      try {
+        const available = await checkAvailablity(products, user.id, amount);
+        if(available){
+          setOpen(true);
+          const res = await createOrder(products, user.id, amount);
+          if(res.success){
+            setQR(res.orderId);
+            setData({orderId:res.orderId,amount});
+          }else{
+            toast({
+              title: "Error Occured",
+              description: res.error,
+              variant: "destructive",
+            });
+          }
         }
-      } else {
-        throw new Error("Payment not successful.");
-      }
     } catch (error) {
-      console.error("Error during purchase process:", error.message);
-      if (!reservationResult || !reservationResult.success) {
-        toast({
-          title: "Stock Unavailable",
-          description:
-            "Requested quantity exceeds stock. Please refresh the page and adjust your order.",
-          variant: "destructive",
-        });
-      }
+      console.error("Error during reservation process:", error.message);
+      toast({
+        title: "Error Occured",
+        description: error.message,
+        variant: "destructive",
+      });
     } finally {
       setButtonLoad(false);
     }
