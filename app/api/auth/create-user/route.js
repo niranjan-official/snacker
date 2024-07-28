@@ -29,7 +29,7 @@ export async function GET(req) {
     return new NextResponse(null, {
         status: 301,
         headers: {
-          Location: `${process.env.NEXT_PUBLIC_SERVER_URL}`,
+          Location: `/`,
         },
       });
     
@@ -38,7 +38,7 @@ export async function GET(req) {
     return new NextResponse(null, {
         status: 302,
         headers: {
-          Location: `${process.env.NEXT_PUBLIC_SERVER_URL}/api/auth/create-user`,
+          Location: `/api/auth/create-user`,
         },
       });
   }
