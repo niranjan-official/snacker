@@ -29,7 +29,7 @@ export async function GET(req) {
     return new NextResponse(null, {
         status: 301,
         headers: {
-          Location: "http://localhost:3000",
+          Location: `${process.env.NEXT_PUBLIC_SERVER_URL}`,
         },
       });
     
@@ -38,7 +38,7 @@ export async function GET(req) {
     return new NextResponse(null, {
         status: 302,
         headers: {
-          Location: "http://localhost:3000/api/auth/create-user",
+          Location: `${process.env.NEXT_PUBLIC_SERVER_URL}/api/auth/create-user`,
         },
       });
   }
