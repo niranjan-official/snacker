@@ -9,8 +9,14 @@ import { Analytics } from '@vercel/analytics/react';
 const poppins = Poppins({ subsets: ["latin"], weight: "400" });
 
 export const metadata = {
+  applicationName: 'snacker',
   title: "Snacker",
   description: "Don't be hungry anymore",
+  manifest: "/manifest.json",
+};
+
+export const viewport = {
+  themeColor: "#191919",
 };
 
 export default function RootLayout({ children }) {
