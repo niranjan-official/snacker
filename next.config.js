@@ -10,9 +10,4 @@ const nextConfig = {
   },
 };
 
-// async function getPwaConfig() {
-//   const withPWA = (await import('./pwaConfig.cjs')).default;
-//   return withPWA(nextConfig);
-// }
-
 export default nextConfig;
