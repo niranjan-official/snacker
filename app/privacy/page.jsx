@@ -3,7 +3,7 @@ import React from 'react';
 const page = () => {
   return (
     <div className="p-8 bg-dark-100 text-white">
-      <h1 className="text-3xl font-bold mb-6">Company Policies</h1>
+      <h1 className="text-3xl font-bold mb-6">Snacker</h1>
       <nav className=" flex flex-col mb-8">
         <a href="#privacy" className="text-blue-500 hover:underline">Privacy Policy</a>
         <a href="#terms" className="text-blue-500 hover:underline">Terms and Conditions</a>
