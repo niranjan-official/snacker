@@ -23,7 +23,7 @@ const Tab = () => {
 
   useEffect(() => {
     try {
-      const starCountRef = ref(rtdb, "/onStockUpdation");
+      const starCountRef = ref(rtdb, "/onStockUpdation/status");
       onValue(starCountRef, (snapshot) => {
         const isUpdating = snapshot.val();
         if (isUpdating) {
