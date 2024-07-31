@@ -8,7 +8,7 @@ const page = () => {
       <nav className="mb-8 flex flex-col gap-2">
         <div className="flex w-full flex-col gap-2">
           <hr />
-          <a href="#privacy" className="text-blue-500 hover:underline">
+          <a href="/terms/privacy" className="text-blue-500 hover:underline">
             • Privacy Policy
           </a>
         </div>
@@ -23,13 +23,13 @@ const page = () => {
         </div>
         <div className="flex w-full flex-col gap-2">
           <hr />
-          <a href="#refund" className="text-blue-500 hover:underline">
+          <a href="/terms/refund" className="text-blue-500 hover:underline">
             • Refund Policy
           </a>
         </div>
         <div className="flex w-full flex-col gap-2">
           <hr />
-          <a href="#contact" className="text-blue-500 hover:underline">
+          <a href="/terms/contact" className="text-blue-500 hover:underline">
             • Contact Us
           </a>
         </div>
