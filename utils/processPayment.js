@@ -45,7 +45,7 @@ export const processPayment = async (amount, user) => {
             email: user?.primaryEmailAddress?.emailAddress || "",
           },
           theme: {
-            color: "#191919",
+            color: "#0D0D0D",
           },
           modal: {
             ondismiss: async function () {
