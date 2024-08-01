@@ -26,7 +26,7 @@ export default function RootLayout({ children }) {
         baseTheme: dark,
         layout: {
           socialButtonsVariant: "iconButton",
-          termsPageUrl: '/terms '
+          termsPageUrl: '/terms'
         },
       }}
     >

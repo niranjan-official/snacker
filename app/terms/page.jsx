@@ -8,9 +8,9 @@ const page = () => {
       <nav className="mb-8 flex flex-col gap-2">
         <div className="flex w-full flex-col gap-2">
           <hr />
-          <a href="/terms/privacy" className="text-blue-500 hover:underline">
+          <Link href="/terms/privacy" className="text-blue-500 hover:underline">
             • Privacy Policy
-          </a>
+          </Link>
         </div>
         <div className="flex w-full flex-col gap-2">
           <hr />
@@ -23,15 +23,21 @@ const page = () => {
         </div>
         <div className="flex w-full flex-col gap-2">
           <hr />
-          <a href="/terms/refund" className="text-blue-500 hover:underline">
+          <Link href="/terms/refund" className="text-blue-500 hover:underline">
             • Refund Policy
-          </a>
+          </Link>
         </div>
         <div className="flex w-full flex-col gap-2">
           <hr />
-          <a href="/terms/contact" className="text-blue-500 hover:underline">
+          <Link href="/terms/shipping" className="text-blue-500 hover:underline">
+            • Shipping and Delivery
+          </Link>
+        </div>
+        <div className="flex w-full flex-col gap-2">
+          <hr />
+          <Link href="/terms/contact" className="text-blue-500 hover:underline">
             • Contact Us
-          </a>
+          </Link>
         </div>
         <hr />
       </nav>
