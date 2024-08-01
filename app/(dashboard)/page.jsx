@@ -43,13 +43,14 @@ export default async function Home() {
         <UserProfileButton />
       </div>
       <div className="flex w-full items-center justify-between mt-4">
-        <p>
+        {/* <p>
           Hi{" "}
           <span className="capitalize">
             {username}
             <span className="text-xl">👋</span>
           </span>
-        </p>
+        </p> */}
+        <p>Welcome to <span className="font-bold">Snacker</span><span className="text-xl">👋</span></p>
         <Credit userId={id} />
       </div>
       <ItemList products={products} />
