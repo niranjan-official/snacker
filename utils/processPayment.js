@@ -47,11 +47,6 @@ export const processPayment = async (amount, user) => {
           theme: {
             color: "#0D0D0D",
           },
-          modal: {
-            ondismiss: async function () {
-              return reject(new Error("Payment was closed by the user"));
-            },
-          },
           retry: {
             enabled: false,
           },
@@ -59,7 +54,6 @@ export const processPayment = async (amount, user) => {
 
         const paymentObject = new window.Razorpay(options);
         paymentObject.on("payment.failed", async function (response) {
-          alert(response.error.description);
           return reject(new Error("Payment failed"));
         });
         paymentObject.open();
