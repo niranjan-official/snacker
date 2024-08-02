@@ -50,7 +50,7 @@ export default async function Home() {
             <span className="text-xl">👋</span>
           </span>
         </p> */}
-        <p>Welcome to <span className="font-bold">Snacker</span></p>
+        <p><span className="font-bold">Christy John Biju</span></p>
         <Credit userId={id} />
       </div>
       <ItemList products={products} />
