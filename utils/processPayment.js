@@ -15,30 +15,11 @@ export const processPayment = async (amount, user) => {
           name: "Snacker",
           description: "Vend your snacks",
           order_id: orderId,
+          notes: {
+            userId: user.id, // Add userid to notes
+          },
           handler: async function (response) {
-            const data = {
-              orderCreationId: orderId,
-              razorpayPaymentId: response.razorpay_payment_id,
-              razorpayOrderId: response.razorpay_order_id,
-              razorpaySignature: response.razorpay_signature,
-            };
-
-            try {
-              const result = await fetch("/api/verify", {
-                method: "POST",
-                body: JSON.stringify(data),
-                headers: { "Content-Type": "application/json" },
-              });
-              const res = await result.json();
-              if (res.isOk) {
-                return resolve({ ok: true, orderId });
-              } else {
-                throw new Error("Payment verification failed");
-              }
-            } catch (error) {
-              console.error("Error verifying payment:", error.message);
-              return reject(error);
-            }
+            return resolve({ ok: true, orderId });
           },
           prefill: {
             name: user?.username || "",
@@ -62,7 +43,5 @@ export const processPayment = async (amount, user) => {
         console.error("Error creating order ID:", error.message);
         return reject(error);
       });
-  }).catch(async (error) => {
-    throw error;
   });
 };

@@ -13,7 +13,6 @@ import { FaCoins } from "react-icons/fa";
 import { processPayment } from "@/utils/processPayment";
 import { useUser } from "@clerk/nextjs";
 import { useToast } from "../ui/use-toast";
-import { updateUserCredit } from "@/utils/updateUserCredit";
 import useCartStore from "@/hooks/useCartStore";
 
 const CreditBlock = ({ open, setOpen }) => {
@@ -33,16 +32,12 @@ const CreditBlock = ({ open, setOpen }) => {
       const res = await processPayment(amount, user);
       if (res.ok) {
         setOpen(true);
-        const result = await updateUserCredit(user.id, res.orderId, amount);
-        if (result.success) {
-          console.log("Credit updation successfull");
           updateCredit(amount);
           toast({
             title: "Payment Sucessfull",
             description: `${amount}rs have been successfully added to your wallet`,
             className: "bg-green-500 text-white"
           });
-        }
       }else{
         toast({
           title: "Credit Updation Failed",
