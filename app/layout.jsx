@@ -4,7 +4,6 @@ import { ClerkProvider } from "@clerk/nextjs";
 import { dark } from "@clerk/themes";
 import { Toaster } from "@/components/ui/toaster";
 import Head from "next/head";
-import { Analytics } from '@vercel/analytics/react';
 
 const poppins = Poppins({ subsets: ["latin"], weight: "400" });
 
@@ -37,7 +36,6 @@ export default function RootLayout({ children }) {
         <body className={poppins.className}>
           <main>{children}</main>
           <Toaster />
-          <Analytics />
         </body>
       </html>
     </ClerkProvider>
