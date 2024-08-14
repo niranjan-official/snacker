@@ -95,9 +95,9 @@ const CreditBlock = ({ open, setOpen }) => {
           <Button
             className="bg-primary text-black transition duration-200 hover:bg-primary disabled:bg-primary/80"
             onClick={handleRecharge}
-            disabled={loading || amount <= 0}
+            disabled={true}
           >
-            {loading ? "Processing..." : "Recharge Now"}
+            Temporarily Stopped
           </Button>
           <DrawerClose asChild>
             <Button
