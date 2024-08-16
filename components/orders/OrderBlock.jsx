@@ -54,7 +54,7 @@ const OrderBlock = ({ id, amount, timeStamp, status, products }) => {
           <p className="text-sm">Date: {date}</p>
           <p className="text-sm">Amount: ₹ {amount} INR</p>
           <p
-            className={`text-sm ${status === "collected" ? "text-green-500" : "text-yellow-500"}`}
+            className={`text-sm ${status === "completed" ? "text-green-500" : "text-yellow-500"}`}
           >
             Status: {status}
           </p>
