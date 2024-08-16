@@ -1,9 +1,9 @@
 import { db } from "@/firebase/config";
 import {
   doc,
-  increment,
+  runTransaction,
   serverTimestamp,
-  writeBatch,
+  setDoc,
 } from "firebase/firestore";
 import { NextResponse } from "next/server";
 import { validateWebhookSignature } from "razorpay/dist/utils/razorpay-utils";
@@ -19,48 +19,65 @@ export async function POST(req) {
       error: "Signature missing",
     });
   }
+
   const isValid = validateWebhookSignature(
     JSON.stringify(data),
     razorpaySignature,
     process.env.RAZORPAY_WEBHOOK_SECRET,
   );
   if (!isValid) {
-    console.log("Not Valid");
+    console.log("Invalid Signature");
     return NextResponse.json({
       success: false,
-      error: "Not Valid",
+      error: "Invalid Signature",
     });
   }
 
   const { order_id: orderId, amount } = data.payload.payment.entity;
   const userId = data.payload.payment.entity.notes.userId;
+  const amountInINR = amount / 100;
 
   try {
-    const batch = writeBatch(db);
+    await Promise.all([
+      updateCredits(userId, amountInINR),
+      setDoc(doc(db, "payments", orderId), {
+        userId,
+        orderId,
+        amount: amountInINR,
+        timeStamp: serverTimestamp(),
+      }),
+    ]);
 
-    const paymentRef = doc(db, "payments", orderId);
-    batch.set(paymentRef, {
-      userId: userId,
-      orderId: orderId,
-      amount: amount / 100, // Amount in INR
-      timeStamp: serverTimestamp(),
-    });
-
-    const userRef = doc(db, "users", userId);
-    batch.update(userRef, {
-      credit: increment(amount / 100),
-    });
-
-    await batch.commit();
     return NextResponse.json({
       success: true,
       message: "Payment processed successfully",
     });
   } catch (error) {
-    console.log(error);
+    console.error("Error processing payment:", error);
     return NextResponse.json({
       success: false,
       error: error.message,
     });
   }
 }
+
+const updateCredits = async (userId, amountInINR) => {
+  const userRef = doc(db, "users", userId);
+
+  try {
+    await runTransaction(db, async (transaction) => {
+      const userDoc = await transaction.get(userRef);
+      if (!userDoc.exists()) {
+        throw new Error("User document does not exist!");
+      }
+
+      const newCredit = (userDoc.data().credit || 0) + amountInINR;
+      transaction.update(userRef, { credit: newCredit });
+    });
+
+    return { success: true };
+  } catch (error) {
+    console.error("Error updating credits:", error);
+    throw new Error("Credit update failed");
+  }
+};
