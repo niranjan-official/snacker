@@ -10,6 +10,12 @@ const poppins = Poppins({ subsets: ["latin"], weight: "400" });
 export const metadata = {
   title: "Snacker",
   description: "Vend your snack in no time",
+  manifest: "/manifest.json",
+  appleWebApp:{
+    capable: true,
+    statusBarStyle: "default",
+    title: "Snacker"
+  }
 };
 
 export default function RootLayout({ children }) {
@@ -26,8 +32,6 @@ export default function RootLayout({ children }) {
       <html lang="en">
         <Head>
           <link rel="icon" href="/favicon.ico" sizes="any" />
-          <link rel="manifest" href="/manifest.json" />
-          <meta name="theme-color" content="#000000" />
         </Head>
         <body className={poppins.className}>
           <main>{children}</main>
