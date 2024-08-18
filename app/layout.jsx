@@ -18,10 +18,6 @@ export const metadata = {
   }
 };
 
-export const viewport = {
-  themeColor: "#191919",
-};
-
 export default function RootLayout({ children }) {
   return (
     <ClerkProvider
