@@ -8,10 +8,21 @@ import Head from "next/head";
 const poppins = Poppins({ subsets: ["latin"], weight: "400" });
 
 export const metadata = {
-  applicationName: 'snacker',
   title: "Snacker",
-  description: "Don't be hungry anymore",
+  description: "Vend your snack in no time",
+  generator: "Next.js",
   manifest: "/manifest.json",
+  keywords: ["snacker", "vending", "providence", "pwa"],
+  authors: [
+    {
+      name: "Niranjan Sabarinath",
+      url: "https://niranjan-official.github.io/My-Personal-Portfolio",
+    },
+  ],
+  icons: [
+    { rel: "apple-touch-icon", url: "/snacker.jpg" },
+    { rel: "icon", url: "/snacker.jpg" },
+  ],
 };
 
 export const viewport = {
