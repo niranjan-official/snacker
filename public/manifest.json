@@ -2,7 +2,7 @@
   "name": "Snacker",
   "short_name": "snacker",
   "theme_color": "#191919",
-  "background_color": "#191919",
+  "background_color": "#c0141f",
   "display": "standalone",
   "orientation": "portrait",
   "start_url": "/",
