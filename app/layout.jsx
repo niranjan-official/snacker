@@ -10,23 +10,6 @@ const poppins = Poppins({ subsets: ["latin"], weight: "400" });
 export const metadata = {
   title: "Snacker",
   description: "Vend your snack in no time",
-  generator: "Next.js",
-  manifest: "/manifest.json",
-  keywords: ["snacker", "vending", "providence", "pwa"],
-  authors: [
-    {
-      name: "Niranjan Sabarinath",
-      url: "https://niranjan-official.github.io/My-Personal-Portfolio",
-    },
-  ],
-  icons: [
-    { rel: "apple-touch-icon", url: "/snacker.jpg" },
-    { rel: "icon", url: "/snacker.jpg" },
-  ],
-};
-
-export const viewport = {
-  themeColor: "#191919",
 };
 
 export default function RootLayout({ children }) {
@@ -43,6 +26,8 @@ export default function RootLayout({ children }) {
       <html lang="en">
         <Head>
           <link rel="icon" href="/favicon.ico" sizes="any" />
+          <link rel="manifest" href="/manifest.json" />
+          <meta name="theme-color" content="#000000" />
         </Head>
         <body className={poppins.className}>
           <main>{children}</main>

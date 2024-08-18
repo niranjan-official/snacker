@@ -3,11 +3,9 @@
   "short_name": "snacker",
   "theme_color": "#191919",
   "background_color": "#000",
-  "display": "browser",
+  "display": "standalone",
   "orientation": "any",
-  "scope": "/",
   "start_url": "/",
-  "splash_pages": null,
 
   "icons": [
     {
