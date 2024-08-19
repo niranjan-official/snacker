@@ -1,29 +1,29 @@
 "use client";
 import React, { useEffect, useState } from "react";
-import { FaBagShopping } from "react-icons/fa6";
-import BackButton from "@/components/cart/BackButton";
 import useCartStore from "@/hooks/useCartStore";
 import FoodBlock from "@/components/cart/FoodBlock";
 import { VscLoading } from "react-icons/vsc";
-import { useUser } from "@clerk/nextjs";
-import Script from "next/script";
 import OrderSuccessBlock from "@/components/shared/OrderSuccessBlock";
 import { TiShoppingCart } from "react-icons/ti";
 import { useToast } from "@/components/ui/use-toast";
-import { checkAvailablity } from "@/utils/checkAvailablity";
-import { createOrder } from "@/utils/createOrder";
 import CreditBlock from "@/components/shared/CreditBlock";
+import usePurchaseProduct from "@/hooks/usePurchaseProduct";
+import CartNotch from "@/components/cart/CartNotch";
 
 const page = () => {
-  const { user } = useUser();
-  const { products, removeAll, updateCredit } = useCartStore();
+  const { products } = useCartStore();
+  const {
+    purchaseProduct,
+    buttonLoad,
+    data,
+    open,
+    setOpen,
+    openWallet,
+    setOpenWallet,
+    triggerReload,
+    setTriggerReload
+  } = usePurchaseProduct();
   const [amount, setAmount] = useState(0);
-  const [buttonLoad, setButtonLoad] = useState(false);
-  const [QR, setQR] = useState("");
-  const [data, setData] = useState("");
-  const [open, setOpen] = useState(false);
-  const [triggerReload, setTriggerReload] = useState(false);
-  const [openWallet, setOpenWallet] = useState(false);
   const { toast } = useToast();
 
   useEffect(() => {
@@ -34,7 +34,7 @@ const page = () => {
     setAmount(total);
   }, [products]);
 
-  const purchaseProduct = async () => {
+  const buyProduct = async () => {
     const totalQuantity = products.reduce(
       (acc, product) => acc + product.count,
       0,
@@ -48,75 +48,14 @@ const page = () => {
       });
       return;
     }
-    setButtonLoad(true);
 
-    try {
-      const available = await checkAvailablity(products, user.id, amount);
-      if (available.success) {
-        setOpen(true);
-        const res = await createOrder(products, user.id, amount);
-        if (res.success) {
-          setQR(res.orderId);
-          setData({ orderId: res.orderId, amount });
-          updateCredit(-amount);
-          removeAll();
-        } else {
-          toast({
-            title: "Order Creation Failed",
-            description:
-              "There was an issue while creating your order. Please try again.",
-            variant: "destructive",
-          });
-        }
-      } else if (available.insufficientCredit) {
-        toast({
-          title: "Insufficient Wallet Balance",
-          description: "Please recharge your wallet to proceed with the order.",
-          variant: "destructive",
-        });
-        setOpenWallet(true);
-      } else if (available.insufficientStock) {
-        toast({
-          title: "Out of Stock",
-          description:
-            "One or more products in your cart are currently out of stock. Please adjust your cart.",
-          variant: "destructive",
-        });
-        setTriggerReload(true);
-      } else {
-        toast({
-          title: "Error",
-          description:
-            available.error ||
-            "An unknown error occurred. Please try again later.",
-          variant: "destructive",
-        });
-      }
-    } catch (error) {
-      toast({
-        title: "Unexpected Error",
-        description: "An unexpected error occurred. Please try again later.",
-        variant: "destructive",
-      });
-    } finally {
-      setButtonLoad(false);
-    }
+    purchaseProduct(products, amount, "cart");
   };
 
   return (
     <div className="flex min-h-screen w-full flex-col justify-between p-6 pb-20">
-      <Script
-        id="razorpay-checkout-js"
-        src="https://checkout.razorpay.com/v1/checkout.js"
-      />
       <div>
-        <div className="flex items-center justify-between">
-          <BackButton />
-          <FaBagShopping
-            size={30}
-            className="rounded-md bg-dark-100 p-2 text-primary"
-          />
-        </div>
+        <CartNotch/>
         {products.length > 0 && (
           <div className="mt-6 flex w-full flex-col border-b pb-4">
             <div className="flex w-full justify-between">
@@ -125,7 +64,7 @@ const page = () => {
             </div>
             <button
               disabled={buttonLoad}
-              onClick={purchaseProduct}
+              onClick={buyProduct}
               className="mt-2 flex w-full items-center justify-center rounded-lg bg-primary p-3 font-bold text-dark-200 shadow hover:bg-primary/60 disabled:bg-primary/70"
             >
               {buttonLoad ? (
@@ -140,7 +79,7 @@ const page = () => {
           </div>
         )}
         <div className="mt-8 flex flex-col gap-5">
-          {products.length > 0 ? (
+          {products?.length > 0 ? (
             products.map((product) => (
               <FoodBlock
                 key={product.productId}
@@ -161,7 +100,7 @@ const page = () => {
         </div>
       </div>
       <CreditBlock open={openWallet} setOpen={setOpenWallet} />
-      <OrderSuccessBlock open={open} setOpen={setOpen} QR={QR} data={data} />
+      <OrderSuccessBlock open={open} setOpen={setOpen} data={data} />
     </div>
   );
 };

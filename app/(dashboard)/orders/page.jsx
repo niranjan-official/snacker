@@ -1,34 +1,14 @@
 import BackButton from "@/components/cart/BackButton";
 import OrderBlock from "@/components/orders/OrderBlock";
-import { db } from "@/firebase/config";
+import { getOrders } from "@/helpers/GetOrders";
 import { auth } from "@clerk/nextjs/server";
-import { collection, getDocs, orderBy, query, where } from "firebase/firestore";
 import React from "react";
 import { FaListAlt } from "react-icons/fa";
 
 export const revalidate = 0;
 
-const getOrders = async (userId) => {
-  try {
-    let orders = [];
-    const q = query(
-      collection(db, "orders"),
-      where("userId", "==", userId),
-      orderBy("timeStamp", "desc"),
-    );
-    const querySnapshot = await getDocs(q);
-    querySnapshot.forEach((doc) => {
-      console.log(doc.id, " => ", doc.data());
-      const data = doc.data();
-      orders.push({ id: doc.id, ...data });
-    });
-    return orders;
-  } catch (error) {
-    console.log(error);
-    return null;
-  }
-};
 const page = async () => {
+  
   const { userId } = auth();
   const orders = await getOrders(userId);
 

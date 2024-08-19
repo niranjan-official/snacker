@@ -1,10 +1,7 @@
 import useCartStore from "@/hooks/useCartStore";
 import Image from "next/image";
 import React, { useEffect, useState } from "react";
-import {
-  MdAddBox,
-  MdIndeterminateCheckBox,
-} from "react-icons/md";
+import { MdAddBox, MdIndeterminateCheckBox } from "react-icons/md";
 import {
   Dialog,
   DialogContent,
@@ -12,34 +9,28 @@ import {
   DialogTrigger,
 } from "@/components/ui/dialog";
 import { VscLoading } from "react-icons/vsc";
-import { useUser } from "@clerk/nextjs";
-import Script from "next/script";
 import OrderSuccessBlock from "../shared/OrderSuccessBlock";
-import { useToast } from "../ui/use-toast";
-import { checkAvailablity } from "@/utils/checkAvailablity";
-import { createOrder } from "@/utils/createOrder";
 import { FaCartPlus } from "react-icons/fa";
 import { Inter } from "next/font/google";
+import usePurchaseProduct from "@/hooks/usePurchaseProduct";
+import { useToast } from "../ui/use-toast";
 
-const inter = Inter({ subsets: ["latin"]});
+const inter = Inter({ subsets: ["latin"] });
 
 const FoodItem = ({ productId, name, price, stock, imgSrc, position }) => {
-  const { user } = useUser();
-  const { addProduct, updateCredit } = useCartStore();
+  console.log("re rendered");
+  
+  const { addProduct } = useCartStore();
+  const { purchaseProduct, buttonLoad, data, open, setOpen } = usePurchaseProduct();
   const [count, setCount] = useState(1);
   const [amount, setAmount] = useState(0);
-  const [buttonLoad, setButtonLoad] = useState(false);
-  const [QR, setQR] = useState("");
-  const [data, setData] = useState("");
-  const [open, setOpen] = useState(false);
   const { toast } = useToast();
 
   useEffect(() => {
     setAmount(price * count);
   }, [count]);
 
-  const purchaseProduct = async () => {
-    setButtonLoad(true);
+  const buyProduct = async () => {
     const products = [
       {
         productId,
@@ -49,56 +40,7 @@ const FoodItem = ({ productId, name, price, stock, imgSrc, position }) => {
         position,
       },
     ];
-    setButtonLoad(true);
-
-      try {
-        const available = await checkAvailablity(products, user.id, amount);
-        if(available.success){
-          setOpen(true);
-          const res = await createOrder(products, user.id, amount);
-          if(res.success){
-            setQR(res.orderId);
-            setData({orderId:res.orderId,amount});
-            updateCredit(-amount);
-          }else{
-            toast({
-              title: "Error Occured",
-              description: res.error,
-              variant: "destructive",
-            });
-          }
-        } else if (available.insufficientCredit) {
-          toast({
-            title: "Insufficient Wallet Balance",
-            description: "Please recharge your wallet to proceed with the order.",
-            variant: "destructive",
-          });
-        } else if (available.insufficientStock) {
-          toast({
-            title: "Out of Stock",
-            description:
-              "This product is currently out of stock.",
-            variant: "destructive",
-          });
-        } else {
-          toast({
-            title: "Error",
-            description:
-              available.error ||
-              "An unknown error occurred. Please try again later.",
-            variant: "destructive",
-          });
-        }
-    } catch (error) {
-      console.error("Error during reservation process:", error.message);
-      toast({
-        title: "Error Occured",
-        description: error.message,
-        variant: "destructive",
-      });
-    } finally {
-      setButtonLoad(false);
-    }
+    purchaseProduct(products, amount);
   };
 
   const addToCart = () => {
@@ -112,11 +54,7 @@ const FoodItem = ({ productId, name, price, stock, imgSrc, position }) => {
 
   return (
     <div className="relative flex w-[calc(50%-0.5rem)] flex-col rounded-lg bg-dark-100 p-2 text-neutral-100 shadow">
-      <Script
-        id="razorpay-checkout-js"
-        src="https://checkout.razorpay.com/v1/checkout.js"
-      />
-      <div className="aspect-square w-full bg-gray-600 rounded-md">
+      <div className="aspect-square w-full rounded-md bg-gray-600">
         <Image
           src={imgSrc}
           width={200}
@@ -165,7 +103,9 @@ const FoodItem = ({ productId, name, price, stock, imgSrc, position }) => {
                   </button>
                   <span className="tabular-nums">{count}</span>
                   <button
-                    onClick={() => setCount((count < 4 && count < stock) ? count + 1 : count)}
+                    onClick={() =>
+                      setCount(count < 4 && count < stock ? count + 1 : count)
+                    }
                     className="h-fit text-neutral-100"
                   >
                     <MdAddBox size={23} />
@@ -173,7 +113,7 @@ const FoodItem = ({ productId, name, price, stock, imgSrc, position }) => {
                 </div>
                 <button
                   disabled={buttonLoad}
-                  onClick={purchaseProduct}
+                  onClick={buyProduct}
                   className="mt-2 flex w-full items-center justify-center rounded-lg bg-yellow-400 p-3 py-2 font-bold text-dark-200 shadow hover:bg-primary/60 disabled:bg-primary/70"
                 >
                   {buttonLoad ? (
@@ -194,7 +134,7 @@ const FoodItem = ({ productId, name, price, stock, imgSrc, position }) => {
       <div className="absolute -right-2 -top-2 rounded-full bg-green-600 px-2 font-semibold text-white shadow">
         {stock}
       </div>
-      <OrderSuccessBlock open={open} setOpen={setOpen} QR={QR} data={data} />
+      <OrderSuccessBlock open={open} setOpen={setOpen} data={data} />
     </div>
   );
 };

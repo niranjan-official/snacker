@@ -6,7 +6,6 @@ import {
   AlertDialog,
   AlertDialogAction,
   AlertDialogContent,
-  AlertDialogDescription,
   AlertDialogFooter,
   AlertDialogHeader,
   AlertDialogTitle,
@@ -14,7 +13,8 @@ import {
 import { Skeleton } from "@/components/ui/skeleton";
 import { useRouter } from "next/navigation";
 
-const OrderSuccessBlock = ({ open, setOpen, QR, data }) => {
+const OrderSuccessBlock = ({ open, setOpen, data }) => {
+  
   const [date, setDate] = useState("");
   const Router = useRouter();
 
@@ -45,18 +45,18 @@ const OrderSuccessBlock = ({ open, setOpen, QR, data }) => {
             </AlertDialogTitle>
           </div>
           <div className="flex flex-col items-center justify-center py-4">
-            {!QR ? (
+            {!data?.orderId ? (
               <Skeleton className="h-[180px] w-[180px] rounded-xl" />
             ) : (
               <div className="flex flex-col items-center">
                 <QRCode
                   size={200}
                   style={{ height: "auto", maxWidth: "100%", width: "auto" }}
-                  value={QR}
+                  value={data?.orderId}
                   viewBox={`0 0 256 256`}
                   className="rounded-md bg-white p-4"
                 />
-                <p className="mt-2">{QR}</p>
+                <p className="mt-2">{data?.orderId}</p>
               </div>
             )}
             {!data?.amount ? (
