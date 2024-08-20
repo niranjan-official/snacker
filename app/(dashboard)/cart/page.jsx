@@ -62,7 +62,7 @@ const page = () => {
             </div>
             <Button
               onClick={buyProduct}
-              className="bg-yellow-400 disabled:bg-yellow/70"
+              className="bg-yellow-400 disabled:bg-yellow-400/70 mt-2"
               loading={buttonLoad}
             >
               Pay Now
