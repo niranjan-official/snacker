@@ -1,11 +1,10 @@
 "use client";
 import React, { useEffect, useState } from "react";
 import { RiHome2Fill } from "react-icons/ri";
-import { BsFillBagHeartFill } from "react-icons/bs";
 import { RiChatHistoryFill } from "react-icons/ri";
 import { usePathname } from "next/navigation";
 import Link from "next/link";
-import useCartStore from "@/hooks/useCartStore";
+import useSnackerStore from "@/hooks/useSnackerStore";
 import { ref, onValue } from "firebase/database";
 import { rtdb } from "@/firebase/config";
 import UpdationBlock from "./UpdationBlock";
@@ -13,7 +12,7 @@ import { RiShoppingCartFill } from "react-icons/ri";
 
 const Tab = () => {
   const path = usePathname();
-  const { products } = useCartStore();
+  const { products } = useSnackerStore();
   const [hasProducts, setHasProducts] = useState(false);
   const [onUpdation, setOnUpdation] = useState(false);
 

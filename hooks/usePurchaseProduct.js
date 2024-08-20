@@ -1,19 +1,17 @@
 import { useUser } from "@clerk/nextjs";
 import { useState } from "react";
-import useCartStore from "./useCartStore";
+import useSnackerStore from "./useSnackerStore";
 import { checkAvailablity } from "@/utils/checkAvailablity";
 import { createOrder } from "@/utils/createOrder";
 import { useToast } from "@/components/ui/use-toast";
 
 const usePurchaseProduct = () => {
-  console.log("Hook re rendered");
   
   const { user } = useUser();
-  const { updateCredit, removeAll } = useCartStore();
+  const { updateCredit, removeAll, setOpenCreditWallet } = useSnackerStore();
   const [buttonLoad, setButtonLoad] = useState(false);
   const [data, setData] = useState({});
-  const [open, setOpen] = useState(false);
-  const [openWallet, setOpenWallet] = useState(false);
+  const [openOrder, setOpenOrder] = useState(false);
   const [triggerReload, setTriggerReload] = useState(false);
   const { toast } = useToast();
 
@@ -23,7 +21,7 @@ const usePurchaseProduct = () => {
     try {
       const available = await checkAvailablity(products, user?.id, amount);
       if (available.success) {
-        setOpen(true);
+        setOpenOrder(true);
         const res = await createOrder(products, user?.id, amount);
         if (res.success) {
           setData({ orderId: res.orderId, amount });
@@ -42,7 +40,7 @@ const usePurchaseProduct = () => {
           description: "Please recharge your wallet to proceed with the order.",
           variant: "destructive",
         });
-        setOpenWallet(true);
+        setOpenCreditWallet(true);
       } else if (available.insufficientStock) {
         toast({
           title: "Out of Stock",
@@ -75,10 +73,8 @@ const usePurchaseProduct = () => {
     purchaseProduct,
     buttonLoad,
     data,
-    open,
-    setOpen,
-    openWallet,
-    setOpenWallet,
+    openOrder,
+    setOpenOrder,
     triggerReload,
     setTriggerReload
   };

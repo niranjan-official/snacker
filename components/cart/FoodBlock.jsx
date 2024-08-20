@@ -1,5 +1,5 @@
 import { db } from "@/firebase/config";
-import useCartStore from "@/hooks/useCartStore";
+import useSnackerStore from "@/hooks/useSnackerStore";
 import { doc, getDoc } from "firebase/firestore";
 import Image from "next/image";
 import React, { useEffect, useState } from "react";
@@ -12,7 +12,7 @@ import { useToast } from "../ui/use-toast";
 const FoodBlock = ({ id, count, triggerReload, setTriggerReload }) => {
   const [product, setProduct] = useState({});
   const [load, setLoad] = useState(true);
-  const { increaseQuantity, decreaseQuantity, removeProduct } = useCartStore();
+  const { increaseQuantity, decreaseQuantity, removeProduct } = useSnackerStore();
   const [warning, setWarning] = useState("");
   const { toast } = useToast();
 

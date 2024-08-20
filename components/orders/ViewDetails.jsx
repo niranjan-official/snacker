@@ -37,7 +37,7 @@ const ViewDetails = ({ id, amount, timeStamp, status, products }) => {
             <DialogTitle className="text-lg font-bold">
               Order Details
             </DialogTitle>
-            <DialogDescription className="mt-2 text-sm">
+            <DialogDescription className="mt-2 text-sm text-neutral-300">
               Here are the details of your order.
             </DialogDescription>
           </DialogHeader>
@@ -52,7 +52,7 @@ const ViewDetails = ({ id, amount, timeStamp, status, products }) => {
               <p className="text-sm">Date: {formattedDate}</p>
               <p className="text-sm">Amount: ₹ {amount} INR</p>
               <p
-                className={`text-sm ${status === "collected" ? "text-green-500" : "text-yellow-500"}`}
+                className={`text-sm ${status === "completed" ? "text-green-500" : "text-yellow-500"}`}
               >
                 Status: {status}
               </p>

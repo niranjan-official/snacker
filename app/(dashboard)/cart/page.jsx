@@ -1,25 +1,23 @@
 "use client";
 import React, { useEffect, useState } from "react";
-import useCartStore from "@/hooks/useCartStore";
+import useSnackerStore from "@/hooks/useSnackerStore";
 import FoodBlock from "@/components/cart/FoodBlock";
-import { VscLoading } from "react-icons/vsc";
 import OrderSuccessBlock from "@/components/shared/OrderSuccessBlock";
 import { TiShoppingCart } from "react-icons/ti";
 import { useToast } from "@/components/ui/use-toast";
-import CreditBlock from "@/components/shared/CreditBlock";
+import CreditWallet from "@/components/shared/CreditWallet";
 import usePurchaseProduct from "@/hooks/usePurchaseProduct";
 import CartNotch from "@/components/cart/CartNotch";
+import Button from "@/components/shared/Button";
 
 const page = () => {
-  const { products } = useCartStore();
+  const { products } = useSnackerStore();
   const {
     purchaseProduct,
     buttonLoad,
     data,
-    open,
-    setOpen,
-    openWallet,
-    setOpenWallet,
+    openOrder,
+    setOpenOrder,
     triggerReload,
     setTriggerReload
   } = usePurchaseProduct();
@@ -62,20 +60,9 @@ const page = () => {
               <span>Total Amount :</span>
               <span>₹ {amount} INR</span>
             </div>
-            <button
-              disabled={buttonLoad}
-              onClick={buyProduct}
-              className="mt-2 flex w-full items-center justify-center rounded-lg bg-primary p-3 font-bold text-dark-200 shadow hover:bg-primary/60 disabled:bg-primary/70"
-            >
-              {buttonLoad ? (
-                <VscLoading
-                  size={20}
-                  className="animate-spin text-dark-200/70"
-                />
-              ) : (
-                "Pay Now"
-              )}
-            </button>
+            <Button onClick={buyProduct} className="bg-primary disabled:bg-primary/70" loading={buttonLoad}>
+              Pay Now
+            </Button>
           </div>
         )}
         <div className="mt-8 flex flex-col gap-5">
@@ -99,8 +86,8 @@ const page = () => {
           )}
         </div>
       </div>
-      <CreditBlock open={openWallet} setOpen={setOpenWallet} />
-      <OrderSuccessBlock open={open} setOpen={setOpen} data={data} />
+      <CreditWallet />
+      <OrderSuccessBlock open={openOrder} setOpen={setOpenOrder} data={data} />
     </div>
   );
 };

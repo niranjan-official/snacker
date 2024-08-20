@@ -1,4 +1,4 @@
-import useCartStore from "@/hooks/useCartStore";
+import useSnackerStore from "@/hooks/useSnackerStore";
 import Image from "next/image";
 import React, { useEffect, useState } from "react";
 import { MdAddBox, MdIndeterminateCheckBox } from "react-icons/md";
@@ -14,21 +14,26 @@ import { FaCartPlus } from "react-icons/fa";
 import { Inter } from "next/font/google";
 import usePurchaseProduct from "@/hooks/usePurchaseProduct";
 import { useToast } from "../ui/use-toast";
+import Button from "../shared/Button";
 
 const inter = Inter({ subsets: ["latin"] });
 
 const FoodItem = ({ productId, name, price, stock, imgSrc, position }) => {
-  console.log("re rendered");
-  
-  const { addProduct } = useCartStore();
-  const { purchaseProduct, buttonLoad, data, open, setOpen } = usePurchaseProduct();
+  const { addProduct, openCreditWallet } = useSnackerStore();
+  const { purchaseProduct, buttonLoad, data, openOrder, setOpenOrder } =
+    usePurchaseProduct();
   const [count, setCount] = useState(1);
   const [amount, setAmount] = useState(0);
+  const [open, setOpen] = useState(false);
   const { toast } = useToast();
 
   useEffect(() => {
     setAmount(price * count);
   }, [count]);
+
+  useEffect(() => {
+    if (openCreditWallet) setOpen(false);
+  }, [openCreditWallet]);
 
   const buyProduct = async () => {
     const products = [
@@ -75,11 +80,9 @@ const FoodItem = ({ productId, name, price, stock, imgSrc, position }) => {
           <FaCartPlus className="text-dark-200" size={20} />
         </button>
       </div>
-      <Dialog>
+      <Dialog open={open} onOpenChange={setOpen}>
         <DialogTrigger asChild>
-          <button className="mt-2 w-full rounded-md bg-yellow-400 p-1 font-bold text-dark-200 hover:bg-primary/70">
-            Buy Now
-          </button>
+          <Button className="mt-2 bg-yellow-400 py-1">Buy Now</Button>
         </DialogTrigger>
         <DialogContent className="border-0 bg-dark-100 py-4 text-neutral-50 outline-none">
           <DialogHeader>
@@ -111,20 +114,13 @@ const FoodItem = ({ productId, name, price, stock, imgSrc, position }) => {
                     <MdAddBox size={23} />
                   </button>
                 </div>
-                <button
-                  disabled={buttonLoad}
+                <Button
                   onClick={buyProduct}
-                  className="mt-2 flex w-full items-center justify-center rounded-lg bg-yellow-400 p-3 py-2 font-bold text-dark-200 shadow hover:bg-primary/60 disabled:bg-primary/70"
+                  className="mt-2 bg-yellow-400 py-2 disabled:bg-yellow-400/70"
+                  loading={buttonLoad}
                 >
-                  {buttonLoad ? (
-                    <VscLoading
-                      size={20}
-                      className="animate-spin text-dark-200/70"
-                    />
-                  ) : (
-                    "Pay Now"
-                  )}
-                </button>
+                  Pay Now
+                </Button>
               </div>
             </div>
           </DialogHeader>
@@ -134,7 +130,7 @@ const FoodItem = ({ productId, name, price, stock, imgSrc, position }) => {
       <div className="absolute -right-2 -top-2 rounded-full bg-green-600 px-2 font-semibold text-white shadow">
         {stock}
       </div>
-      <OrderSuccessBlock open={open} setOpen={setOpen} data={data} />
+      <OrderSuccessBlock open={openOrder} setOpen={setOpenOrder} data={data} />
     </div>
   );
 };

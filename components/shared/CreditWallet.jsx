@@ -1,3 +1,4 @@
+"use client";
 import React, { useState } from "react";
 import {
   Drawer,
@@ -13,11 +14,11 @@ import { FaCoins } from "react-icons/fa";
 import { processPayment } from "@/utils/processPayment";
 import { useUser } from "@clerk/nextjs";
 import { useToast } from "../ui/use-toast";
-import useCartStore from "@/hooks/useCartStore";
+import useSnackerStore from "@/hooks/useSnackerStore";
 
-const CreditBlock = ({ open, setOpen }) => {
-
-  const {updateCredit} = useCartStore();
+const CreditWallet = () => {
+  const { updateCredit, openCreditWallet, setOpenCreditWallet } =
+    useSnackerStore();
   const [amount, setAmount] = useState(0);
   const [loading, setLoading] = useState(false);
   const { user } = useUser();
@@ -27,18 +28,18 @@ const CreditBlock = ({ open, setOpen }) => {
     setLoading(true);
     try {
       setTimeout(() => {
-        setOpen(false);
+        setOpenCreditWallet(false);
       }, 3000);
       const res = await processPayment(amount, user);
       if (res.ok) {
-        setOpen(true);
-          updateCredit(amount);
-          toast({
-            title: "Payment Sucessfull",
-            description: `${amount}rs have been successfully added to your wallet`,
-            className: "bg-green-500 text-white"
-          });
-      }else{
+        setOpenCreditWallet(true);
+        updateCredit(amount);
+        toast({
+          title: "Payment Sucessfull",
+          description: `${amount}rs have been successfully added to your wallet`,
+          className: "bg-green-500 text-white",
+        });
+      } else {
         toast({
           title: "Credit Updation Failed",
           description: res.error,
@@ -56,7 +57,7 @@ const CreditBlock = ({ open, setOpen }) => {
   };
 
   return (
-    <Drawer open={open} onOpenChange={setOpen}>
+    <Drawer open={openCreditWallet} onOpenChange={setOpenCreditWallet}>
       <DrawerContent className="border-0 bg-dark-100 text-white">
         <DrawerHeader>
           <DrawerTitle>Recharge Your Wallet</DrawerTitle>
@@ -92,7 +93,7 @@ const CreditBlock = ({ open, setOpen }) => {
           </div>
         </div>
         <DrawerFooter className="flex justify-between">
-        <Button
+          <Button
             className="bg-primary text-black transition duration-200 hover:bg-primary disabled:bg-primary/80"
             onClick={handleRecharge}
             disabled={loading || amount <= 0}
@@ -120,4 +121,4 @@ const CreditBlock = ({ open, setOpen }) => {
   );
 };
 
-export default CreditBlock;
+export default CreditWallet;

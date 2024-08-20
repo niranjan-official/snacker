@@ -5,13 +5,13 @@ const Sort = ({ products, setProductList }) => {
   const [activeSort, setActiveSort] = useState("all");
 
   useEffect(() => {
-    console.log(products);
     if (activeSort !== "all") {
-      setProductList(products.filter((prod) => prod.category === activeSort));
+      setProductList(products.filter((prod) => prod.category.toLowerCase() === activeSort));
     } else {
       setProductList(products);
     }
   }, [activeSort]); 
+
   return (
     <div className="mt-4 flex gap-3 text-sm font-medium text-primary">
       <button

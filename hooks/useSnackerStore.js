@@ -14,10 +14,12 @@ const saveCartToLocalStorage = (cart) => {
   }
 };
 
-const useCartStore = create((set) => ({
+const useSnackerStore = create((set) => ({
   products: getCartFromLocalStorage(),
   credit: 0,
+  openCreditWallet: false,
 
+  setOpenCreditWallet: (value) => set({ openCreditWallet: value }),
   setCredit: (newCredit) => set({ credit: newCredit }),
   updateCredit: (amount) => set((state) => ({ credit: state.credit + amount })),
 
@@ -30,7 +32,7 @@ const useCartStore = create((set) => ({
 
       if (existingProduct) {
         updatedProducts = state.products.map((product) =>
-          ((product.productId === productId))
+          product.productId === productId
             ? { ...product, count: product.count + count }
             : product,
         );
@@ -86,4 +88,4 @@ const useCartStore = create((set) => ({
     }),
 }));
 
-export default useCartStore;
+export default useSnackerStore;

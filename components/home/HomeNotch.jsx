@@ -1,7 +1,7 @@
 import React from "react";
 import UserProfileButton from "./UserProfileButton";
 import { HiViewGrid } from "react-icons/hi";
-import Credit from "./Credit";
+import CreditButton from "./CreditButton";
 
 const HomeNotch = ({username, id}) => {
   return (
@@ -21,7 +21,7 @@ const HomeNotch = ({username, id}) => {
             <span className="text-xl">👋</span>
           </span>
         </p>
-        <Credit userId={id} />
+        <CreditButton userId={id} />
       </div>
     </>
   );
