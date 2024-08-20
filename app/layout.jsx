@@ -4,6 +4,7 @@ import { ClerkProvider } from "@clerk/nextjs";
 import { dark } from "@clerk/themes";
 import { Toaster } from "@/components/ui/toaster";
 import Head from "next/head";
+import { ThemeProvider } from "@/components/ui/theme-provider";
 import Script from "next/script";
 
 const poppins = Poppins({ subsets: ["latin"], weight: "400" });
@@ -33,11 +34,21 @@ export default function RootLayout({ children }) {
       <html lang="en">
         <Head>
           <link rel="icon" href="/favicon.ico" sizes="any" />
-          <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover"/>
+          <meta
+            name="viewport"
+            content="width=device-width, initial-scale=1, viewport-fit=cover"
+          />
         </Head>
         <body className={poppins.className}>
-          <main>{children}</main>
-          <Toaster />
+          <ThemeProvider
+            attribute="class"
+            defaultTheme="dark"
+            enableSystem
+            disableTransitionOnChange
+          >
+            <main>{children}</main>
+            <Toaster />
+          </ThemeProvider>
           <Script
             id="razorpay-checkout-js"
             src="https://checkout.razorpay.com/v1/checkout.js"
