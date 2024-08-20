@@ -37,28 +37,39 @@ const Tab = () => {
   }, []);
 
   return (
-    <div className="fixed bottom-0 left-0 flex h-16 w-full items-center justify-evenly border-t border-dark-200 bg-dark-100 p-2 py-1">
+    <div className="fixed bottom-0 left-0 flex w-full items-center justify-evenly border-t border-dark-200 bg-dark-100 p-2 py-1">
       <Link
         href={"/"}
-        className={`rounded-lg p-2 py-1 ${path === "/" ? "text-white" : "text-primary/70"}`}
+        className={`rounded-lg p-1 ${path === "/" ? "text-white" : "text-primary/70"}`}
       >
-        <RiHome2Fill size={20} />
+        <div className="flex flex-col items-center gap-1">
+          <RiHome2Fill size={20} />
+          <span className="text-xs font-light">Home</span>
+        </div>
+
         <UpdationBlock onUpdation={onUpdation} />
       </Link>
       <Link
         href={"/cart"}
-        className={`relative rounded-lg p-2 ${path === "/cart" ? "text-white" : "text-primary/70"}`}
+        className={`relative rounded-lg p-1 ${path === "/cart" ? "text-white" : "text-primary/70"}`}
       >
-        <RiShoppingCartFill size={20} />
+        <div className="flex flex-col items-center gap-1">
+          <RiShoppingCartFill size={20} />
+          <span className="text-xs font-light">Cart</span>
+        </div>
+
         {hasProducts && path !== "/cart" && (
           <div className="absolute right-1 top-1 h-3 w-3 rounded-full border border-primary bg-red-600"></div>
         )}
       </Link>
       <Link
         href={"/orders"}
-        className={`rounded-lg p-2 ${path === "/orders" ? "text-white" : "text-primary/70"}`}
+        className={`rounded-lg p-1 ${path === "/orders" ? "text-white" : "text-primary/70"}`}
       >
-        <RiChatHistoryFill size={20} />
+        <div className="flex flex-col items-center gap-1">
+          <RiChatHistoryFill size={20} />
+          <span className="text-xs font-light">Orders</span>
+        </div>
       </Link>
     </div>
   );

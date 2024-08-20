@@ -16,8 +16,7 @@ const withPWA = withPWAInit({
   dest: "public",
   fallbacks: {
     document: "/offline",
-  },
-  disable: true
+  }
 });
 
 export default withPWA(nextConfig);
