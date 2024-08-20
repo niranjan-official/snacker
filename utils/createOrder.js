@@ -7,13 +7,13 @@ export const createOrder = async (products, userId, amount) => {
         "Content-Type": "application/json",
       },
     });
-    const data = await res.json()
+    const data = await res.json();
     console.log(data);
-    if(data.success){
-        return {success: true, orderId: data.orderId};
-    }else{
-        console.log(data.error);
-        return {success: false}
+    if (data.success) {
+      return { success: true, orderId: data.orderId };
+    } else {
+      console.log(data.error);
+      return { success: false };
     }
   } catch (error) {
     console.log(error);

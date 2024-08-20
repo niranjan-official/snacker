@@ -10,7 +10,6 @@ import {
 } from "@/components/ui/dialog";
 
 const ViewDetails = ({ id, amount, timeStamp, status, products }) => {
-
   function formatDateTime(date) {
     let newDate = new Date(date.seconds * 1000);
     const year = newDate.getFullYear();
@@ -32,7 +31,7 @@ const ViewDetails = ({ id, amount, timeStamp, status, products }) => {
             View Details
           </button>
         </DialogTrigger>
-        <DialogContent className="max-w-lg rounded-lg bg-dark-100 p-6 text-neutral-50 shadow-lg border-0">
+        <DialogContent className="max-w-lg rounded-lg border-0 bg-dark-100 p-6 text-neutral-50 shadow-lg">
           <DialogHeader>
             <DialogTitle className="text-lg font-bold">
               Order Details

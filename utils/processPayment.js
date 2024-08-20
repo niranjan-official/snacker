@@ -16,7 +16,7 @@ export const processPayment = async (amount, user) => {
           description: "Vend your snacks",
           order_id: orderId,
           notes: {
-            userId: user.id, // Add userid to notes
+            userId: user.id,
           },
           handler: async function (response) {
             return resolve({ ok: true, orderId });

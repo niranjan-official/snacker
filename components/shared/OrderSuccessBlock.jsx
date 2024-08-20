@@ -14,7 +14,6 @@ import { Skeleton } from "@/components/ui/skeleton";
 import { useRouter } from "next/navigation";
 
 const OrderSuccessBlock = ({ open, setOpen, data }) => {
-  
   const [date, setDate] = useState("");
   const Router = useRouter();
 

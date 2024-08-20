@@ -8,7 +8,6 @@ import { FaListAlt } from "react-icons/fa";
 export const revalidate = 0;
 
 const page = async () => {
-  
   const { userId } = auth();
   const orders = await getOrders(userId);
 
@@ -22,7 +21,7 @@ const page = async () => {
         />
       </div>
       <div className="mt-4">
-        <h3 className="text-2xl">Orders List</h3>
+        <h3 className="text-2xl">My Orders</h3>
         <hr className="mt-2" />
       </div>
       <div className="mt-6 flex w-full flex-col gap-5">

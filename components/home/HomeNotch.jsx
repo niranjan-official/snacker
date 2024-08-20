@@ -3,7 +3,7 @@ import UserProfileButton from "./UserProfileButton";
 import { HiViewGrid } from "react-icons/hi";
 import CreditButton from "./CreditButton";
 
-const HomeNotch = ({username, id}) => {
+const HomeNotch = ({ username, id }) => {
   return (
     <>
       <div className="flex items-center justify-between">

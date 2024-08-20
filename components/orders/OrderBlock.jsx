@@ -61,7 +61,13 @@ const OrderBlock = ({ id, amount, timeStamp, status, products }) => {
         </div>
       </div>
       <div className="mt-4 flex w-full justify-between">
-        <ViewDetails id={id} amount={amount} timeStamp={timeStamp} status={status} products={products} />
+        <ViewDetails
+          id={id}
+          amount={amount}
+          timeStamp={timeStamp}
+          status={status}
+          products={products}
+        />
         <button
           className="rounded-lg bg-green-500 px-4 py-2 font-semibold text-neutral-50 hover:bg-green-400"
           onClick={handleDownloadQR}

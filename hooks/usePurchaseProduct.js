@@ -6,7 +6,6 @@ import { createOrder } from "@/utils/createOrder";
 import { useToast } from "@/components/ui/use-toast";
 
 const usePurchaseProduct = () => {
-  
   const { user } = useUser();
   const { updateCredit, removeAll, setOpenCreditWallet } = useSnackerStore();
   const [buttonLoad, setButtonLoad] = useState(false);
@@ -16,7 +15,6 @@ const usePurchaseProduct = () => {
   const { toast } = useToast();
 
   const purchaseProduct = async (products, amount, type = "normal") => {
-
     setButtonLoad(true);
     try {
       const available = await checkAvailablity(products, user?.id, amount);
@@ -76,7 +74,7 @@ const usePurchaseProduct = () => {
     openOrder,
     setOpenOrder,
     triggerReload,
-    setTriggerReload
+    setTriggerReload,
   };
 };
 

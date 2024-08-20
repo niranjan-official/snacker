@@ -6,11 +6,13 @@ const Sort = ({ products, setProductList }) => {
 
   useEffect(() => {
     if (activeSort !== "all") {
-      setProductList(products.filter((prod) => prod.category.toLowerCase() === activeSort));
+      setProductList(
+        products.filter((prod) => prod.category.toLowerCase() === activeSort),
+      );
     } else {
       setProductList(products);
     }
-  }, [activeSort]); 
+  }, [activeSort]);
 
   return (
     <div className="mt-4 flex gap-3 text-sm font-medium text-primary">

@@ -19,7 +19,7 @@ const page = () => {
     openOrder,
     setOpenOrder,
     triggerReload,
-    setTriggerReload
+    setTriggerReload,
   } = usePurchaseProduct();
   const [amount, setAmount] = useState(0);
   const { toast } = useToast();
@@ -53,19 +53,23 @@ const page = () => {
   return (
     <div className="flex min-h-screen w-full flex-col justify-between p-6 pb-20">
       <div>
-        <CartNotch/>
+        <CartNotch />
         {products.length > 0 && (
           <div className="mt-6 flex w-full flex-col border-b pb-4">
             <div className="flex w-full justify-between">
               <span>Total Amount :</span>
               <span>₹ {amount} INR</span>
             </div>
-            <Button onClick={buyProduct} className="bg-primary disabled:bg-primary/70" loading={buttonLoad}>
+            <Button
+              onClick={buyProduct}
+              className="bg-yellow-400 disabled:bg-yellow/70"
+              loading={buttonLoad}
+            >
               Pay Now
             </Button>
           </div>
         )}
-        <div className="mt-8 flex flex-col gap-5">
+        <div className="mt-5 flex flex-col gap-5">
           {products?.length > 0 ? (
             products.map((product) => (
               <FoodBlock

@@ -37,17 +37,17 @@ const Tab = () => {
   }, []);
 
   return (
-    <div className="fixed bottom-0 left-0 flex h-16 w-full items-center justify-evenly border-t border-dark-200 bg-dark-100 p-2">
+    <div className="fixed bottom-0 left-0 flex h-16 w-full items-center justify-evenly border-t border-dark-200 bg-dark-100 p-2 py-1">
       <Link
         href={"/"}
-        className={`rounded-lg p-2 ${path === "/" ? "bg-primary text-dark-200" : "text-primary"}`}
+        className={`rounded-lg p-2 py-1 ${path === "/" ? "text-white" : "text-primary/70"}`}
       >
         <RiHome2Fill size={20} />
         <UpdationBlock onUpdation={onUpdation} />
       </Link>
       <Link
         href={"/cart"}
-        className={`relative rounded-lg p-2 ${path === "/cart" ? "bg-primary text-dark-200" : "text-primary"}`}
+        className={`relative rounded-lg p-2 ${path === "/cart" ? "text-white" : "text-primary/70"}`}
       >
         <RiShoppingCartFill size={20} />
         {hasProducts && path !== "/cart" && (
@@ -56,7 +56,7 @@ const Tab = () => {
       </Link>
       <Link
         href={"/orders"}
-        className={`rounded-lg p-2 ${path === "/orders" ? "bg-primary text-dark-200" : "text-primary"}`}
+        className={`rounded-lg p-2 ${path === "/orders" ? "text-white" : "text-primary/70"}`}
       >
         <RiChatHistoryFill size={20} />
       </Link>

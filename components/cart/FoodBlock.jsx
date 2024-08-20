@@ -12,7 +12,8 @@ import { useToast } from "../ui/use-toast";
 const FoodBlock = ({ id, count, triggerReload, setTriggerReload }) => {
   const [product, setProduct] = useState({});
   const [load, setLoad] = useState(true);
-  const { increaseQuantity, decreaseQuantity, removeProduct } = useSnackerStore();
+  const { increaseQuantity, decreaseQuantity, removeProduct } =
+    useSnackerStore();
   const [warning, setWarning] = useState("");
   const { toast } = useToast();
 
@@ -29,13 +30,12 @@ const FoodBlock = ({ id, count, triggerReload, setTriggerReload }) => {
   }, [triggerReload]);
 
   useEffect(() => {
-    if ((product.stock) === 0) {
+    if (product.stock === 0) {
       setWarning("Out of Stock");
       toast({
         title: "Stock Unavailable",
-        description:
-          "Some products in your cart are unavailable",
-        variant: 'destructive'
+        description: "Some products in your cart are unavailable",
+        variant: "destructive",
       });
     } else if (count > product.stock) {
       setWarning(`Only ${product.stock} available`);

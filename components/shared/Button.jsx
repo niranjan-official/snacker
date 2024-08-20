@@ -7,7 +7,7 @@ const Button = ({ children, loading = false, className, ...props }) => {
     <button
       disabled={loading}
       className={cn(
-        "flex w-full items-center justify-center rounded-lg p-3 font-bold shadow text-dark-200",
+        "flex w-full items-center justify-center rounded-lg p-3 font-bold text-dark-200 shadow",
         className,
       )}
       {...props}

@@ -63,9 +63,18 @@ export async function POST(req) {
     if (e.message === "insufficientCredit") {
       return NextResponse.json({ success: false, insufficientCredit: true });
     } else if (e.message === "insufficientStock") {
-      return NextResponse.json({ success: false, insufficientCredit: false, insufficientStock: true });
+      return NextResponse.json({
+        success: false,
+        insufficientCredit: false,
+        insufficientStock: true,
+      });
     }
 
-    return NextResponse.json({ success: false, insufficientCredit: false, insufficientStock: false, error: e.message });
+    return NextResponse.json({
+      success: false,
+      insufficientCredit: false,
+      insufficientStock: false,
+      error: e.message,
+    });
   }
 }
