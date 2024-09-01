@@ -52,10 +52,10 @@ export async function POST(req) {
       });
     });
 
-    console.log("Reservation and credits updated successfully");
+    console.log("Purchase Successfull");
     return NextResponse.json({
       success: true,
-      message: "Updation and credits updated successfully",
+      message: "Purchase Successfull",
     });
   } catch (e) {
     console.error("Error buying products:", e.message);
