@@ -72,7 +72,3 @@ This project was made possible through the dedication and hard work of a 10-memb
 ## License 📄
 
 This project is licensed under the MIT License.
-
-## Contact 📧
-
-For any queries or contributions, feel free to reach out through the GitHub issues or contact us at **your-email@example.com**.
