@@ -24,7 +24,7 @@ const page = async () => {
         <h3 className="text-2xl">My Orders</h3>
         <hr className="mt-2" />
       </div>
-      <div className="mt-6 flex w-full flex-col gap-5">
+      <div className="mt-6 w-full grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
         {orders.length > 0 ? (
           orders?.map((order, index) => (
             <OrderBlock

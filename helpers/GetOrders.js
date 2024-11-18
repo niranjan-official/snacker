@@ -21,3 +21,22 @@ export const getOrders = async (userId) => {
     return null;
   }
 };
+
+export function formatDateToYYYYMMDD(date) {
+  let newDate = new Date(date.seconds * 1000);
+  const year = newDate.getFullYear();
+  const month = String(newDate.getMonth() + 1).padStart(2, "0");
+  const day = String(newDate.getDate()).padStart(2, "0");
+
+  return `${year}-${month}-${day}`;
+}
+
+export function formatTimeTo12Hour(date) {
+  let newDate = new Date(date.seconds * 1000);
+  let hours = newDate.getHours();
+  const minutes = String(newDate.getMinutes()).padStart(2, "0");
+  const ampm = hours >= 12 ? "PM" : "AM";
+
+  hours = hours % 12 || 12;
+  return `${hours}:${minutes} ${ampm}`;
+}

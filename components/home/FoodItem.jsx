@@ -58,7 +58,7 @@ const FoodItem = ({ productId, name, price, stock, imgSrc, position }) => {
   };
 
   return (
-    <div className="relative flex w-[calc(50%-0.5rem)] flex-col rounded-lg bg-dark-100 p-2 text-neutral-100 shadow">
+    <div className="relative flex w-full flex-col rounded-lg bg-dark-100 p-2 text-neutral-100 shadow">
       <div className="aspect-square w-full rounded-md bg-gray-600">
         <Image
           src={imgSrc}
