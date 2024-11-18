@@ -37,29 +37,27 @@ const OrderBlock = ({ id, amount, timeStamp, status, products }) => {
   };
 
   return (
-    <div className="flex flex-col max-w-full items-center rounded-lg bg-dark-100 p-4 text-neutral-50 shadow-lg">
-      <div className="flex w-full items-center md:justify-center gap-4">
+    <div className="flex max-w-full flex-col items-center rounded-lg bg-dark-100 p-4 text-neutral-50 shadow-lg">
+      <div className="flex w-full items-center gap-4 md:justify-center">
         <div ref={qrRef} className="rounded-md bg-white p-2">
           <QRCode size={100} value={id} viewBox={`0 0 256 256`} />
         </div>
-        <div className="flex flex-col gap-2 justify-center">
-          <p className="text-sm flex items-center gap-2">
+        <div className="flex flex-col justify-center gap-2">
+          <p className="flex items-center gap-2 text-sm">
             <FaCalendarAlt size={18} /> {date}
           </p>
-          <p className="text-sm flex items-center gap-2">
+          <p className="flex items-center gap-2 text-sm">
             <GoClockFill size={18} /> {time}
           </p>
-          <p className="text-sm flex items-center gap-2">
-            Amount: ₹{amount}
-          </p>
+          <p className="flex items-center gap-2 text-sm">Amount: ₹{amount}</p>
           <p
-            className={`text-sm border rounded-[0.5rem] p-1 px-3 ${status === "completed" ? "text-green-500 border-green-500" : "text-yellow-500 border-yellow-500"}`}
+            className={`rounded-[0.5rem] border p-1 px-3 text-sm ${status === "completed" ? "border-green-500 text-green-500" : "border-yellow-500 text-yellow-500"}`}
           >
             Order {status}
           </p>
         </div>
       </div>
-      <div className="mt-4 flex w-full justify-center sm:gap-4 max-sm:justify-between">
+      <div className="mt-4 flex w-full justify-center max-sm:justify-between sm:gap-4">
         <ViewDetails
           id={id}
           amount={amount}
