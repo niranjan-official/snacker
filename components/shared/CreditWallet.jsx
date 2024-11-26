@@ -93,20 +93,20 @@ const CreditWallet = () => {
           </div>
         </div>
         <DrawerFooter className="flex justify-between">
-          {/* <Button
+          <Button
             className="bg-primary text-black transition duration-200 hover:bg-primary disabled:bg-primary/80"
             onClick={handleRecharge}
             disabled={loading || amount <= 0}
           >
             {loading ? "Processing..." : "Recharge Now"}
-          </Button> */}
-          <Button
+          </Button>
+          {/* <Button
             className="bg-primary text-black transition duration-200 hover:bg-primary disabled:bg-primary/80"
             onClick={handleRecharge}
             disabled={true}
           >
             Temporarily Stopped
-          </Button> 
+          </Button>  */}
           <DrawerClose asChild>
             <Button
               disabled={loading}
