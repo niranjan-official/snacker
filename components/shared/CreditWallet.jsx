@@ -1,5 +1,5 @@
 "use client";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
   Drawer,
   DrawerClose,
@@ -23,6 +23,12 @@ const CreditWallet = () => {
   const [loading, setLoading] = useState(false);
   const { user } = useUser();
   const { toast } = useToast();
+
+  useEffect(() => {
+    if (!openCreditWallet) {
+      setLoading(false);
+    }
+  }, [openCreditWallet]);
 
   const handleRecharge = async () => {
     setLoading(true);
