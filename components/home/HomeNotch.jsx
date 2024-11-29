@@ -13,7 +13,7 @@ const HomeNotch = ({ username, id }) => {
         />
         <UserProfileButton />
       </div>
-      <div className="mt-4 flex w-full items-center justify-between">
+      <div className="mt-6 flex w-full items-center justify-between">
         <p>
           Hi{" "}
           <span className="capitalize">
