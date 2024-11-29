@@ -12,7 +12,7 @@ const UserProfileButton = () => {
   return (
     <div>
       {isClient && (
-        <div>
+        <div className="flex items-center">
           <SignedIn>
             <UserButton />
           </SignedIn>

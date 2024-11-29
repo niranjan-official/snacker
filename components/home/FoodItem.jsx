@@ -58,7 +58,7 @@ const FoodItem = ({ productId, name, price, stock, imgSrc, position }) => {
   };
 
   return (
-    <div className="relative flex w-full flex-col rounded-lg bg-dark-100 p-2 text-neutral-100 shadow">
+    <div className="relative flex w-full flex-col rounded-lg bg-[#1f1e1e] p-2 text-neutral-100 shadow">
       <div className="aspect-square w-full rounded-md bg-gray-600">
         <Image
           src={imgSrc}
@@ -127,7 +127,7 @@ const FoodItem = ({ productId, name, price, stock, imgSrc, position }) => {
         </DialogContent>
       </Dialog>
 
-      <div className="absolute -right-2 -top-2 rounded-full bg-green-600 px-2 font-semibold text-white shadow">
+      <div className="absolute size-6 text-sm flex justify-center items-center text-center -right-2 -top-2 rounded-full bg-green-600 font-semibold text-white shadow">
         {stock}
       </div>
       <OrderSuccessBlock open={openOrder} setOpen={setOpenOrder} data={data} />
