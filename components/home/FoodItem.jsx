@@ -18,7 +18,15 @@ import Button from "../shared/Button";
 
 const inter = Inter({ subsets: ["latin"] });
 
-const FoodItem = ({ productId, name, price, stock, imgSrc, position }) => {
+const FoodItem = ({
+  productId,
+  name,
+  price,
+  stock,
+  imgSrc,
+  position,
+  subtitle,
+}) => {
   const { addProduct, openCreditWallet } = useSnackerStore();
   const { purchaseProduct, buttonLoad, data, openOrder, setOpenOrder } =
     usePurchaseProduct();
@@ -42,6 +50,7 @@ const FoodItem = ({ productId, name, price, stock, imgSrc, position }) => {
         count,
         price,
         name,
+        subtitle,
         position,
       },
     ];
@@ -49,7 +58,7 @@ const FoodItem = ({ productId, name, price, stock, imgSrc, position }) => {
   };
 
   const addToCart = () => {
-    addProduct(productId, 1, price, name, position, stock);
+    addProduct(productId, 1, price, name, position, subtitle);
     toast({
       title: "Added To Cart",
       description: `${name} has been added to your cart`,
@@ -71,6 +80,9 @@ const FoodItem = ({ productId, name, price, stock, imgSrc, position }) => {
       <div className="flex items-center justify-between">
         <div>
           <h3 className={`${inter.className} mt-2`}>{name}</h3>
+          <h5 className="mb-1 text-xs leading-3 text-neutral-300">
+            {subtitle}
+          </h5>
           <span className="font-semibold">₹ {price}.00</span>
         </div>
         <button
@@ -127,7 +139,7 @@ const FoodItem = ({ productId, name, price, stock, imgSrc, position }) => {
         </DialogContent>
       </Dialog>
 
-      <div className="absolute size-6 text-sm flex justify-center items-center text-center -right-2 -top-2 rounded-full bg-green-600 font-semibold text-white shadow">
+      <div className="absolute -right-2 -top-2 flex size-6 items-center justify-center rounded-full bg-green-600 text-center text-sm font-semibold text-white shadow">
         {stock}
       </div>
       <OrderSuccessBlock open={openOrder} setOpen={setOpenOrder} data={data} />

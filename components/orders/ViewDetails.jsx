@@ -61,9 +61,11 @@ const ViewDetails = ({ id, amount, timeStamp, status, products }) => {
               <ul className="mt-2 space-y-2">
                 {products.map((product, index) => (
                   <li key={index} className="flex justify-between text-sm">
-                    <span>{product.name}</span>
                     <span>
-                      {product.count} x ₹{product.price}
+                      {product?.name} ( {product?.subtitle} )
+                    </span>
+                    <span>
+                      {product?.count} x ₹{product?.price}
                     </span>
                   </li>
                 ))}

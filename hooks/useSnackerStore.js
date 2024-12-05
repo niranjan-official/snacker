@@ -23,7 +23,7 @@ const useSnackerStore = create((set) => ({
   setCredit: (newCredit) => set({ credit: newCredit }),
   updateCredit: (amount) => set((state) => ({ credit: state.credit + amount })),
 
-  addProduct: (productId, count, price, name, position) =>
+  addProduct: (productId, count, price, name, position, subtitle) =>
     set((state) => {
       const existingProduct = state.products.find(
         (product) => product.productId === productId,
@@ -39,7 +39,7 @@ const useSnackerStore = create((set) => ({
       } else {
         updatedProducts = [
           ...state.products,
-          { productId, count, price, name, position },
+          { productId, count, price, name, position, subtitle },
         ];
       }
 

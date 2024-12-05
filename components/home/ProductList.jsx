@@ -13,6 +13,7 @@ const ProductList = ({ products }) => {
           stock={product.stock}
           imgSrc={product.imgSrc}
           position={product.position}
+          subtitle={product.subtitle}
         />
       ))}
     </div>

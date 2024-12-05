@@ -75,16 +75,19 @@ const FoodBlock = ({ id, count, triggerReload, setTriggerReload }) => {
     return (
       <div className="flex flex-col rounded-lg bg-dark-100 p-3 shadow">
         <div className="flex justify-between">
-          <div className="flex h-14 gap-3">
+          <div className="flex items-center gap-3">
             <Image
               src={product.imgSrc}
               width={80}
               height={80}
-              className="h-full w-auto rounded-lg"
+              className="h-14 w-auto rounded-lg"
               alt={id}
             />
-            <div className="flex flex-col py-2">
+            <div className="flex flex-col">
               <h5 className="text-sm font-extralight">{product?.name}</h5>
+              <h5 className="mb-1 text-xs leading-3 text-neutral-300">
+                {product?.subtitle}
+              </h5>
               <span className="font-medium">₹ {product?.price}.00</span>
             </div>
           </div>
@@ -111,7 +114,7 @@ const FoodBlock = ({ id, count, triggerReload, setTriggerReload }) => {
             </div>
           </div>
         </div>
-        <p className="mt-2 text-red-600">{warning}</p>
+        {warning && <p className="mt-2 text-red-600">{warning}</p>}
       </div>
     );
   }
