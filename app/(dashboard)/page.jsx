@@ -11,7 +11,7 @@ export default async function Home() {
   const products = await getProductList();
 
   return (
-    <div className="min-h-screen w-full p-6 md:px-16 pb-20">
+    <div className="min-h-screen w-full p-6 pb-20 md:px-16">
       <HomeNotch username={username} id={id} />
       <ProductSection products={products} />
       <CreditWallet />

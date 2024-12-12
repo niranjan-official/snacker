@@ -83,7 +83,7 @@ const page = () => {
           ) : (
             <div className="mt-20 flex w-full flex-col items-center py-3 text-primary/50">
               <TiShoppingCart size={80} />
-              <p className="mt-2 text-center text-3xl font-extrabold">
+              <p className="mt-2 text-center text-2xl font-extrabold">
                 Your Cart is Empty!
               </p>
               <p className="px-8 text-center leading-5">
