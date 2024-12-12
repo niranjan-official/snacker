@@ -8,7 +8,6 @@ import {
   DialogHeader,
   DialogTrigger,
 } from "@/components/ui/dialog";
-import { VscLoading } from "react-icons/vsc";
 import OrderSuccessBlock from "../shared/OrderSuccessBlock";
 import { FaCartPlus } from "react-icons/fa";
 import { Inter } from "next/font/google";

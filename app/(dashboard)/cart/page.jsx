@@ -62,7 +62,7 @@ const page = () => {
             </div>
             <Button
               onClick={buyProduct}
-              className="bg-yellow-400 disabled:bg-yellow-400/70 mt-2"
+              className="mt-2 bg-yellow-400 disabled:bg-yellow-400/70"
               loading={buttonLoad}
             >
               Pay Now
@@ -81,10 +81,13 @@ const page = () => {
               />
             ))
           ) : (
-            <div className="mt-4 flex w-full flex-col items-center py-3 text-neutral-50/50">
-              <TiShoppingCart size={50} />
+            <div className="mt-20 flex w-full flex-col items-center py-3 text-primary/50">
+              <TiShoppingCart size={80} />
               <p className="mt-2 text-center text-3xl font-extrabold">
-                Cart is Empty
+                Your Cart is Empty!
+              </p>
+              <p className="px-8 text-center leading-5">
+                Add something to bring your <br /> cart to life.
               </p>
             </div>
           )}
