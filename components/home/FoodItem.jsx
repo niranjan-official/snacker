@@ -141,6 +141,14 @@ const FoodItem = ({
       <div className="absolute -right-2 -top-2 flex size-6 items-center justify-center rounded-full bg-green-600 text-center text-sm font-semibold text-white shadow">
         {stock}
       </div>
+      {
+        productId === 'XhwXxH68y7qERlAIYyFC' && (
+          <div className="absolute top-0 left-0">
+            <Image src={'/discount_badge.png'} width={60} height={60} />
+          </div>
+        )
+      }
+      <div></div>
       <OrderSuccessBlock open={openOrder} setOpen={setOpenOrder} data={data} />
     </div>
   );
