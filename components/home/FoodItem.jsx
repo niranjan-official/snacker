@@ -143,8 +143,8 @@ const FoodItem = ({
       </div>
       {
         productId === 'XhwXxH68y7qERlAIYyFC' && (
-          <div className="absolute top-0 left-0">
-            <Image src={'/discount_badge.png'} width={60} height={60} />
+          <div className="absolute -top-1 -left-2">
+            <Image src={'/discount_badge.png'} width={100} height={100} />
           </div>
         )
       }
