@@ -10,6 +10,7 @@ import { rtdb } from "@/firebase/config";
 import UpdationBlock from "./UpdationBlock";
 import { RiShoppingCartFill } from "react-icons/ri";
 import { useAuth } from "@clerk/nextjs";
+import Disclaimer from "./Disclaimer";
 
 const Tab = () => {
   const { userId } = useAuth();
@@ -52,6 +53,7 @@ const Tab = () => {
         </div>
 
         <UpdationBlock onUpdation={onUpdation} />
+        <Disclaimer />
       </Link>
       <Link
         href={"/cart"}
