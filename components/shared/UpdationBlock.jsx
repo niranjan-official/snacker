@@ -17,11 +17,11 @@ const UpdationBlock = ({ onUpdation }) => {
             <div className="flex w-full justify-center">
               <HiMiniWrenchScrewdriver size={150} />
             </div>
-            <AlertDialogTitle className="text-2xl">
+            <AlertDialogTitle className="text-2xl text-center">
               🛑 Maintenance 🛑
             </AlertDialogTitle>
-            <AlertDialogDescription className="text-lg text-neutral-200">
-              The payment section is currently under maintenance. Please check back later.
+            <AlertDialogDescription className="text-lg text-neutral-200 text-center">
+              The vending machine is currently under maintenance. Please check back later.
             </AlertDialogDescription>
           </AlertDialogHeader>
         </AlertDialogContent>

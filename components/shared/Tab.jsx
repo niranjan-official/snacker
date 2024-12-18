@@ -9,8 +9,10 @@ import { ref, onValue } from "firebase/database";
 import { rtdb } from "@/firebase/config";
 import UpdationBlock from "./UpdationBlock";
 import { RiShoppingCartFill } from "react-icons/ri";
+import { useAuth } from "@clerk/nextjs";
 
 const Tab = () => {
+  const { userId } = useAuth();
   const path = usePathname();
   const { products } = useSnackerStore();
   const [hasProducts, setHasProducts] = useState(false);
@@ -26,7 +28,9 @@ const Tab = () => {
       onValue(starCountRef, (snapshot) => {
         const isUpdating = snapshot.val();
         if (isUpdating) {
-          setOnUpdation(true);
+          if (userId != "user_2juwtQLosbodI2PdP7wdEpprRXJ") {
+            setOnUpdation(true);
+          }
         } else {
           setOnUpdation(false);
         }
