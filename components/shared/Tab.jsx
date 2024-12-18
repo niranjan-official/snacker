@@ -28,7 +28,7 @@ const Tab = () => {
       onValue(starCountRef, (snapshot) => {
         const isUpdating = snapshot.val();
         if (isUpdating) {
-          if (userId != "user_2juwtQLosbodI2PdP7wdEpprRXJ") {
+          if (userId != process.env.NEXT_PUBLIC_TESTUSER_ID) {
             setOnUpdation(true);
           }
         } else {
