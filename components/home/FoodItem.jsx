@@ -93,7 +93,7 @@ const FoodItem = ({
       </div>
       <Dialog open={open} onOpenChange={setOpen}>
         <DialogTrigger asChild>
-          <Button className="mt-2 bg-yellow-400 py-1">Buy Now</Button>
+          <Button className="mt-2 bg-pink-200 py-1">Buy Now</Button>
         </DialogTrigger>
         <DialogContent className="border-0 bg-dark-100 py-4 text-neutral-50 outline-none">
           <DialogHeader>
@@ -127,7 +127,7 @@ const FoodItem = ({
                 </div>
                 <Button
                   onClick={buyProduct}
-                  className="mt-2 bg-yellow-400 py-2 disabled:bg-yellow-400/70"
+                  className="mt-2 bg-pink-200 py-2 disabled:bg-pink-400/70"
                   loading={buttonLoad}
                 >
                   Pay Now
