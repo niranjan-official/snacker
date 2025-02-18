@@ -18,7 +18,7 @@ const HomeNotch = ({ username, id }) => {
           Hi{" "}
           <span className="capitalize">
             {username}
-            <span className="text-xl">🩷</span>
+            <span className="text-xl">👋</span>
           </span>
         </p>
         <CreditButton userId={id} />

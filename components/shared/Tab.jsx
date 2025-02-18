@@ -11,8 +11,6 @@ import UpdationBlock from "./UpdationBlock";
 import { RiShoppingCartFill } from "react-icons/ri";
 import { useAuth } from "@clerk/nextjs";
 import Disclaimer from "./Disclaimer";
-import Image from "next/image";
-import { IoHeart } from "react-icons/io5";
 
 const Tab = () => {
   const { userId } = useAuth();
@@ -67,9 +65,7 @@ const Tab = () => {
         </div>
 
         {hasProducts && path !== "/cart" && (
-          <div className="absolute right-1 top-0 h-3 w-3 ">
-            <IoHeart size={15} className="text-red-500" />
-          </div>
+          <div className="absolute right-1 top-1 h-3 w-3 rounded-full border border-primary bg-red-600"></div>
         )}
       </Link>
       <Link

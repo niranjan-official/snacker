@@ -1,4 +1,3 @@
-import Decor from "@/components/home/Decor";
 import HomeNotch from "@/components/home/HomeNotch";
 import ProductSection from "@/components/home/ProductSection";
 import CreditWallet from "@/components/shared/CreditWallet";
@@ -12,11 +11,10 @@ export default async function Home() {
   const products = await getProductList();
 
   return (
-    <div className="min-h-screen w-full p-6 pb-20 md:px-16 relative">
+    <div className="min-h-screen w-full p-6 pb-20 md:px-16">
       <HomeNotch username={username} id={id} />
       <ProductSection products={products} />
       <CreditWallet />
-      {/* <Decor/> */}
     </div>
   );
 }
