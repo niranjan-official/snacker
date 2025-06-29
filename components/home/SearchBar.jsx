@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from "react";
+import { motion } from "framer-motion";
 import { FiSearch } from "react-icons/fi";
 
 const SearchBar = ({ products, setProductList }) => {
@@ -12,18 +13,57 @@ const SearchBar = ({ products, setProductList }) => {
   }, [search]);
 
   return (
-    <div className="flex w-full gap-2">
-      <div className="flex w-full rounded-md bg-dark-100 p-3 text-primary shadow">
-        <FiSearch size={23} />
-        <input
+    <motion.div 
+      className="flex w-full gap-2"
+      initial={{ opacity: 0, y: 20 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ duration: 0.5, ease: "easeOut" }}
+    >
+      <motion.div 
+        className="flex w-full rounded-md bg-dark-100 p-3 text-primary shadow"
+        whileHover={{ 
+          boxShadow: "0 4px 12px rgba(0, 0, 0, 0.3)",
+          transition: { duration: 0.2 }
+        }}
+        whileFocusWithin={{ 
+          boxShadow: "0 4px 12px rgba(0, 0, 0, 0.4)",
+          scale: 1.02,
+          transition: { duration: 0.2 }
+        }}
+      >
+        <motion.div
+          initial={{ opacity: 0, x: -10 }}
+          animate={{ opacity: 1, x: 0 }}
+          transition={{ delay: 0.1, duration: 0.3 }}
+        >
+          <FiSearch size={23} />
+        </motion.div>
+        <motion.input
           onChange={(e) => setSearch(e.target.value.toLowerCase())}
           type="text"
           placeholder="Search"
           className="w-full bg-transparent pl-2 placeholder:text-primary/50 focus:outline-none focus:ring-0"
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ delay: 0.2, duration: 0.3 }}
         />
-      </div>
-      <button className="rounded-md bg-dark-100 p-2 px-3 shadow">
-        <svg
+      </motion.div>
+      <motion.button 
+        className="rounded-md bg-dark-100 p-2 px-3 shadow"
+        whileHover={{ 
+          scale: 1.05,
+          backgroundColor: "#2a2a2a",
+          transition: { duration: 0.2 }
+        }}
+        whileTap={{ 
+          scale: 0.95,
+          transition: { duration: 0.1 }
+        }}
+        initial={{ opacity: 0, x: 10 }}
+        animate={{ opacity: 1, x: 0 }}
+        transition={{ delay: 0.3, duration: 0.3 }}
+      >
+        <motion.svg
           xmlns="http://www.w3.org/2000/svg"
           viewBox="0 0 24 24"
           fill="none"
@@ -32,6 +72,8 @@ const SearchBar = ({ products, setProductList }) => {
           strokeLinecap="round"
           strokeLinejoin="round"
           className="icon icon-tabler icons-tabler-outline icon-tabler-adjustments-horizontal size-6 text-primary"
+          whileHover={{ rotate: 90 }}
+          transition={{ duration: 0.3 }}
         >
           <path stroke="none" d="M0 0h24v24H0z" fill="none" />
           <path d="M14 6m-2 0a2 2 0 1 0 4 0a2 2 0 1 0 -4 0" />
@@ -43,9 +85,9 @@ const SearchBar = ({ products, setProductList }) => {
           <path d="M17 18m-2 0a2 2 0 1 0 4 0a2 2 0 1 0 -4 0" />
           <path d="M4 18l11 0" />
           <path d="M19 18l1 0" />
-        </svg>
-      </button>
-    </div>
+        </motion.svg>
+      </motion.button>
+    </motion.div>
   );
 };
 

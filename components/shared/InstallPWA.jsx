@@ -225,10 +225,7 @@ export default function InstallPWA({
     // Banner variant
     if (variant === "banner") {
         return (
-            <motion.div
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.3 }}
+            <div
                 className={`rounded-md flex items-center justify-between ${className}`}
             >
                 <Button
@@ -256,7 +253,7 @@ export default function InstallPWA({
                         </span>
                     )}
                 </Button>
-            </motion.div>
+            </div>
         )
     }
 
