@@ -6,6 +6,8 @@
   "display": "standalone",
   "orientation": "portrait",
   "start_url": "/",
+  "scope": "/",
+  "description": "Snacker is an innovative vending machine system for easy snack ordering and QR-based vending.",
 
   "icons": [
     {

@@ -53,7 +53,7 @@ const Tab = () => {
         </div>
 
         <UpdationBlock onUpdation={onUpdation} />
-        <Disclaimer />
+        {/* <Disclaimer /> */}
       </Link>
       <Link
         href={"/cart"}
