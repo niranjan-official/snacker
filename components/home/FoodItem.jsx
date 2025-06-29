@@ -68,7 +68,7 @@ const FoodItem = ({
 
   return (
     <motion.div 
-      className="relative flex w-full flex-col rounded-lg bg-[#1f1e1e] p-2 text-neutral-100 shadow"
+      className="relative flex w-full flex-col rounded-lg bg-[#1f1e1e] p-3 text-neutral-100 shadow"
       whileHover={{ 
         boxShadow: "0 10px 25px rgba(0, 0, 0, 0.3)",
         transition: { duration: 0.3 }
@@ -90,8 +90,8 @@ const FoodItem = ({
       <div className="flex items-center justify-between">
         <div>
           <h3 className={`${inter.className} mt-2`}>{name}</h3>
-          <h5 className="mb-1 text-xs leading-3 text-neutral-300">
-            {subtitle}
+          <h5 className="mb-1 text-xs leading-3 text-neutral-300 truncate max-w-full">
+            {subtitle.length > 13 ? `${subtitle.slice(0, 13)}...` : subtitle}
           </h5>
           <span className="font-semibold">₹ {price}.00</span>
         </div>
@@ -120,68 +120,123 @@ const FoodItem = ({
             <Button className="mt-2 bg-yellow-400 py-1">Buy Now</Button>
           </motion.div>
         </DialogTrigger>
-        <DialogContent className="border-0 bg-dark-100 py-4 text-neutral-50 outline-none">
-          <DialogHeader>
-            <div className="flex w-full items-center gap-3">
+        <DialogContent className="border-0 bg-dark-100 py-6 text-neutral-50 outline-none max-w-md mx-auto">
+          <DialogHeader className="space-y-4">
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.4 }}
+              className="flex flex-col items-center space-y-4"
+            >
+              {/* Product Image */}
               <motion.div
-                initial={{ scale: 0.8, opacity: 0 }}
-                animate={{ scale: 1, opacity: 1 }}
-                transition={{ duration: 0.3 }}
+                className="relative w-32 h-32 rounded-2xl overflow-hidden bg-dark-200 shadow-lg"
+                whileHover={{ scale: 1.05 }}
+                transition={{ duration: 0.2 }}
               >
                 <Image
                   src={imgSrc}
-                  width={300}
-                  height={300}
-                  className="h-auto w-1/2 rounded-2xl bg-dark-200"
+                  fill
+                  className="object-cover"
+                  alt={name}
                 />
               </motion.div>
-              <div className="flex flex-col text-left">
-                <h5>{name}</h5>
-                <p>₹{price * count}.00</p>
-                <span className="mt-2">Select quantity</span>
-                <div className="flex items-center gap-1">
+              
+              {/* Product Info */}
+              <div className="text-center">
+                <motion.h3 
+                  className="text-xl font-bold text-white"
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: 1 }}
+                  transition={{ delay: 0.1, duration: 0.3 }}
+                >
+                  {name}
+                </motion.h3>
+                <motion.p 
+                  className="text-sm text-neutral-400"
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: 1 }}
+                  transition={{ delay: 0.2, duration: 0.3 }}
+                >
+                  {subtitle}
+                </motion.p>
+              </div>
+            </motion.div>
+
+            {/* Price and Quantity Section */}
+            <motion.div 
+              className="space-y-4"
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.3, duration: 0.4 }}
+            >
+              {/* Price Display */}
+              <div className="flex justify-center">
+                <div className="bg-primary/10 rounded-lg px-4 py-2 border border-primary/20">
+                  <span className="text-2xl font-bold text-primary">₹{price * count}.00</span>
+                </div>
+              </div>
+
+              {/* Quantity Selector */}
+              <div className="space-y-3">
+                <p className="text-center text-sm font-medium text-neutral-300">
+                  Select Quantity
+                </p>
+                <div className="flex items-center justify-center gap-4">
                   <motion.button
                     onClick={() => setCount(count > 1 ? count - 1 : count)}
-                    className="h-fit text-neutral-100"
-                    whileHover={{ scale: 1.2 }}
-                    whileTap={{ scale: 0.8 }}
+                    className="h-10 w-10 rounded-full bg-dark-200 flex items-center justify-center hover:bg-dark-300 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+                    whileHover={{ scale: 1.1 }}
+                    whileTap={{ scale: 0.9 }}
+                    disabled={count <= 1}
                   >
-                    <MdIndeterminateCheckBox size={23} />
+                    <MdIndeterminateCheckBox size={20} className="text-white" />
                   </motion.button>
-                  <motion.span 
-                    className="tabular-nums"
+                  
+                  <motion.div 
+                    className="min-w-[60px] text-center"
                     key={count}
                     initial={{ scale: 1.2, color: "#fbbf24" }}
                     animate={{ scale: 1, color: "#ffffff" }}
                     transition={{ duration: 0.2 }}
                   >
-                    {count}
-                  </motion.span>
+                    <span className="text-2xl font-bold tabular-nums">{count}</span>
+                  </motion.div>
+                  
                   <motion.button
                     onClick={() =>
                       setCount(count < 4 && count < stock ? count + 1 : count)
                     }
-                    className="h-fit text-neutral-100"
-                    whileHover={{ scale: 1.2 }}
-                    whileTap={{ scale: 0.8 }}
+                    className="h-10 w-10 rounded-full bg-dark-200 flex items-center justify-center hover:bg-dark-300 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+                    whileHover={{ scale: 1.1 }}
+                    whileTap={{ scale: 0.9 }}
+                    disabled={count >= 4 || count >= stock}
                   >
-                    <MdAddBox size={23} />
+                    <MdAddBox size={20} className="text-white" />
                   </motion.button>
                 </div>
-                <motion.div
-                  whileHover={{ scale: 1.02 }}
-                  whileTap={{ scale: 0.98 }}
-                >
-                  <Button
-                    onClick={buyProduct}
-                    className="mt-2 bg-yellow-400 py-2 disabled:bg-yellow-400/70"
-                    loading={buttonLoad}
-                  >
-                    Pay Now
-                  </Button>
-                </motion.div>
+                
+                {/* Stock Info */}
+                <p className="text-center text-xs text-neutral-500">
+                  Available: {stock} units
+                </p>
               </div>
-            </div>
+
+              {/* Pay Button */}
+              <motion.div
+                className="pt-2"
+                whileHover={{ scale: 1.02 }}
+                whileTap={{ scale: 0.98 }}
+              >
+                <Button
+                  onClick={buyProduct}
+                  className="w-full bg-gradient-to-r from-yellow-400 to-yellow-500 hover:from-yellow-500 hover:to-yellow-600 text-dark-200 font-bold py-3 rounded-lg shadow-lg disabled:opacity-70 disabled:cursor-not-allowed transition-all duration-200"
+                  loading={buttonLoad}
+                >
+                  {buttonLoad ? "Processing..." : `Pay ₹${price * count}.00`}
+                </Button>
+              </motion.div>
+            </motion.div>
           </DialogHeader>
         </DialogContent>
       </Dialog>
