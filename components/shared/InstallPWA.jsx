@@ -48,8 +48,28 @@ export default function InstallPWA({
             return /iphone|ipad|ipod/.test(userAgent)
         }
 
+        // Check if PWA is installable (for cases where beforeinstallprompt already fired)
+        const checkInstallability = () => {
+            // Check if the app meets PWA criteria
+            const hasValidManifest = !!document.querySelector('link[rel="manifest"]');
+            const hasServiceWorker = 'serviceWorker' in navigator;
+            const isHttps = window.location.protocol === 'https:' || window.location.hostname === 'localhost';
+            
+            if (hasValidManifest && hasServiceWorker && isHttps) {
+                // Show install button for iOS or if we're in a supported browser
+                const isIOS = checkIfIOS();
+                if (isIOS) {
+                    setIsInstallable(true);
+                }
+            }
+        }
+
         checkIfInstalled()
-        setIsIOS(checkIfIOS())
+        const isIOS = checkIfIOS();
+        setIsIOS(isIOS)
+        
+        // Check installability immediately
+        checkInstallability()
 
         // Listen for beforeinstallprompt event
         const handleBeforeInstallPrompt = (e) => {
@@ -73,9 +93,15 @@ export default function InstallPWA({
         window.addEventListener("beforeinstallprompt", handleBeforeInstallPrompt)
         window.addEventListener("appinstalled", handleAppInstalled)
 
+        // Check again after a delay to handle late-firing events
+        const timeoutId = setTimeout(() => {
+            checkInstallability()
+        }, 1000)
+
         return () => {
             window.removeEventListener("beforeinstallprompt", handleBeforeInstallPrompt)
             window.removeEventListener("appinstalled", handleAppInstalled)
+            clearTimeout(timeoutId)
         }
     }, [])
 
@@ -224,7 +250,7 @@ export default function InstallPWA({
 
 
                     ) : (
-                        <span className="leading-0 text-xs flex items-center gap-2">
+                        <span className="leading-0 text-xs flex items-center gap-1">
                             Download App
                             <Download size={16} />
                         </span>
