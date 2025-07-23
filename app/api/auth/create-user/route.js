@@ -5,6 +5,23 @@ import { NextResponse } from "next/server";
 
 export const dynamic = 'force-dynamic';
 
+const logCreateUserError = async (userId, error) => {
+  try {
+    await setDoc(
+      doc(db, "errors", `${userId || "unknown"}_${Date.now()}`),
+      {
+        userId: userId || "unknown",
+        errorMessage: error.message,
+        stack: error.stack,
+        timeStamp: serverTimestamp(),
+        context: "createUser",
+      }
+    );
+  } catch (e) {
+    console.error("Failed to log error to Firestore:", e);
+  }
+};
+
 export async function GET(req) {
   try {
     const { userId } = auth();
@@ -37,6 +54,8 @@ export async function GET(req) {
     
   } catch (error) {
     console.error("Error creating user:", error);
+    const { userId } = auth() || {};
+    await logCreateUserError(userId, error);
     return new NextResponse(null, {
         status: 302,
         headers: {

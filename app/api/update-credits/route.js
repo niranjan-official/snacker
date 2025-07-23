@@ -61,6 +61,24 @@ export async function POST(req) {
   }
 }
 
+const logCreditUpdateError = async (userId, amountInINR, error) => {
+  try {
+    await setDoc(
+      doc(db, "errors", `${userId}_${Date.now()}`),
+      {
+        userId: userId || " ",
+        amountInINR,
+        errorMessage: error.message,
+        stack: error.stack,
+        timeStamp: serverTimestamp(),
+        context: "updateCredits",
+      }
+    );
+  } catch (e) {
+    console.error("Failed to log error to Firestore:", e);
+  }
+};
+
 const updateCredits = async (userId, amountInINR) => {
   const userRef = doc(db, "users", userId);
 
@@ -78,6 +96,7 @@ const updateCredits = async (userId, amountInINR) => {
     return { success: true };
   } catch (error) {
     console.error("Error updating credits:", error);
+    await logCreditUpdateError(userId, amountInINR, error);
     throw new Error("Credit update failed");
   }
 };
