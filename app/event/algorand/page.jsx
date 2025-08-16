@@ -13,6 +13,7 @@ import {
 import { Spotlight } from "@/components/algorand/spotlight-new";
 import { DotBackground } from "@/components/algorand/DotBackground";
 import LoadingScreen from "@/components/algorand/LoadingScreen";
+import { useToast } from "@/components/ui/use-toast";
 
 const EventPaymentPage = () => {
   const searchParams = useSearchParams();
@@ -21,6 +22,7 @@ const EventPaymentPage = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [paymentLoading, setPaymentLoading] = useState(false);
+  const { toast } = useToast();
 
   const baseAmount = 1;
   const platformFee = (baseAmount * 2.36) / 100;
@@ -97,10 +99,14 @@ const EventPaymentPage = () => {
           foodPreference: studentData.foodPreference,
           eventType: "algorand",
         },
-        handler: function (response) {
-          alert("Payment successful! Your registration is confirmed.");
-          window.location.reload();
-        },
+                 handler: function (response) {
+           toast({
+             title: "Payment Successful!",
+             description: "Your registration for Algorand event is confirmed.",
+             className: "bg-green-500 text-white",
+           });
+           window.location.reload();
+         },
         prefill: {
           name: studentData.name,
           email: studentData.email,
@@ -119,15 +125,23 @@ const EventPaymentPage = () => {
       };
 
       const rzp = new window.Razorpay(options);
-      rzp.on("payment.failed", function (response) {
-        alert("Payment failed. Please try again.");
-        setPaymentLoading(false);
-      });
+             rzp.on("payment.failed", function (response) {
+         toast({
+           title: "Payment Failed",
+           description: "Please try again.",
+           variant: "destructive",
+         });
+         setPaymentLoading(false);
+       });
       rzp.open();
-    } catch (error) {
-      console.error("Payment error:", error);
-      alert("Payment failed: " + error.message);
-    } finally {
+         } catch (error) {
+       console.error("Payment error:", error);
+       toast({
+         title: "Payment Failed",
+         description: error.message,
+         variant: "destructive",
+       });
+     } finally {
       setPaymentLoading(false);
     }
   };
