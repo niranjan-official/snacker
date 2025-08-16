@@ -22,7 +22,7 @@ const EventPaymentPage = () => {
   const [error, setError] = useState(null);
   const [paymentLoading, setPaymentLoading] = useState(false);
 
-  const baseAmount = 50;
+  const baseAmount = 1;
   const platformFee = (baseAmount * 2.36) / 100;
   const totalAmount = baseAmount + platformFee;
 
