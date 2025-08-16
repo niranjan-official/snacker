@@ -23,14 +23,30 @@ export async function POST(req) {
     });
   }
 
+  // Debug: Log the webhook secret being used (remove in production)
+  const webhookSecret = process.env.RAZORPAY_ALGORAND_WEBHOOK_SECRET;
+  console.log("Webhook Secret exists:", !!webhookSecret);
+  console.log("Webhook Secret length:", webhookSecret ? webhookSecret.length : 0);
+
+  if (!webhookSecret) {
+    console.error("RAZORPAY_WEBHOOK_SECRET environment variable is missing!");
+    return NextResponse.json({
+      success: false,
+      error: "Webhook secret not configured",
+    });
+  }
+
   const isValid = validateWebhookSignature(
     JSON.stringify(data),
     razorpaySignature,
-    process.env.RAZORPAY_API_KEY_SECRET,
+    webhookSecret,
   );
   
   if (!isValid) {
     console.log("Algorand Event: Invalid Signature");
+    console.log("Received signature:", razorpaySignature);
+    console.log("Webhook secret length:", webhookSecret.length);
+    console.log("Data being validated:", JSON.stringify(data, null, 2));
     return NextResponse.json({
       success: false,
       error: "Invalid Signature",
