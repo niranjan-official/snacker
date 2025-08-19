@@ -24,7 +24,7 @@ const EventPaymentPage = () => {
   const [paymentLoading, setPaymentLoading] = useState(false);
   const { toast } = useToast();
 
-  const baseAmount = 50;
+  const baseAmount = 60;
   const platformFee = (baseAmount * 2.36) / 100;
   const totalAmount = baseAmount + platformFee;
 
